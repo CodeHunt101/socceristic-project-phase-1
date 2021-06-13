@@ -1,0 +1,35 @@
+body {
+  /* color: #389175;
+  background: #090b4a; */
+  color: #3e830e;
+  background: #f4fdf3;
+}
+#container {
+  display: flex;
+}
+.sidebar#countries {
+  flex-grow: 1;
+}
+.content {
+  flex-grow: 4;
+  text-align: center;
+}
+.sidebar#facts {
+  flex-grow: 2;
+}
+#list-countries {
+  padding-inline-start: 10px;
+}
+#list-countries li {
+  list-style-type: none;
+  width:50%;
+  
+}
+.country-name {
+  vertical-align: 10px;
+  margin-left: 5px;
+  font-weight: bolder;
+}
+li img {
+  width: 40px
+}
