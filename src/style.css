@@ -22,14 +22,17 @@ body {
 }
 #list-countries li {
   list-style-type: none;
-  width:50%;
-  
+  width: 60%;
 }
 .country-name {
   vertical-align: 10px;
-  margin-left: 5px;
+  margin-left: 10px;
   font-weight: bolder;
 }
 li img {
-  width: 40px
+  width: 40px;
+}
+label,
+select {
+  display: none;
 }
