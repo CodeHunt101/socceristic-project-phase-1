@@ -77,25 +77,21 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
               );
 
             //Render name and logo of first division league
-            if (!!document.querySelectorAll(".content h3")[0]) {
-              document.querySelectorAll(".content h3")[0].remove();
-              document.querySelectorAll(".content img")[0].remove();
+            if (!!document.querySelector("#league-champion")) {
+              querySelector("#league-champion").remove();
             }
             document
               .querySelector(".content")
-              .appendChild(document.createElement("h3")).textContent =
-              leagues.response[0].league.name;
-            document
-              .querySelector(".content h3:first-of-type")
-              .setAttribute("id", leagues.response[0].league.id);
-            document
-              .querySelector(".content")
-              .appendChild(document.createElement("img"))
-              .setAttribute("src", leagues.response[0].league.logo);
-            document
-              .querySelector(".content")
-              .appendChild(document.createElement("h3")).textContent =
-              "1st Place";
+              .appendChild(document.createElement("div"))
+              .setAttribute("id", "league-champion");
+            document.querySelector(
+              "#league-champion"
+            ).innerHTML = `<div id="league">
+                <h3 id=${leagues.response[0].league.id}>${leagues.response[0].league.name}</h3>
+                <img src=${leagues.response[0].league.logo}>
+              </div>
+              <div id="champion">
+              </div>`;
 
             //Render the last champion team logo
             let leagueId = leagues.response[0].league.id;
@@ -106,13 +102,11 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
             )
               .then((resp) => resp.json())
               .then((standings) => {
-                document
-                  .querySelector(".content")
-                  .appendChild(document.createElement("img"))
-                  .setAttribute(
-                    "src",
-                    standings.response[0].league.standings[0][0].team.logo
-                  );
+                document.querySelector(
+                  "#champion"
+                ).innerHTML = `
+                <h3>1st Place</h3>
+                <img src=${standings.response[0].league.standings[0][0].team.logo}>`;
                 //Render Table & Standings last season
                 renderStandingsTable();
               });
@@ -122,23 +116,21 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
     //Render champion team logo
     let season = document.querySelector("select");
     season.addEventListener("change", function () {
-      if (!!document.querySelectorAll(".content img")[1]) {
-        document.querySelectorAll(".content img")[1].remove();
+      if (!!document.querySelectorAll("#league-champion img")[1]) {
+        document.querySelectorAll("#league-champion img")[1].remove();
       }
-      let leagueId = document.querySelector(".content h3:first-of-type").id;
+      let leagueId = document.querySelector(
+        "#league-champion h3:first-of-type"
+      ).id;
       fetch(
         `https://v3.football.api-sports.io/standings?league=${leagueId}&season=${season.value}`,
         apiCongigObj
       )
         .then((resp) => resp.json())
         .then((standings) => {
-          document
-            .querySelector(".content")
-            .appendChild(document.createElement("img"))
-            .setAttribute(
-              "src",
-              standings.response[0].league.standings[0][0].team.logo
-            );
+          document.querySelector("#champion").innerHTML = `
+          <h3>1st Place</h3>
+          <img src=${standings.response[0].league.standings[0][0].team.logo}>`;
 
           //Render Table & Standings
           renderStandingsTable();
