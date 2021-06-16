@@ -1,11 +1,8 @@
 const countryTargets = [
-  "Spain",
   "Germany",
   "Italy",
-  "France",
   "England",
-  "Portugal",
-  "Belgium",
+  "Spain"
 ];
 const apiCongigObj = {
   method: "GET",
@@ -86,11 +83,12 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
               .setAttribute("id", "league-champion");
             document.querySelector(
               "#league-champion"
-            ).innerHTML = `<div id="league">
+            ).innerHTML = `
+              <div id="league">
                 <h3 id=${leagues.response[0].league.id}>${leagues.response[0].league.name}</h3>
                 <img src=${leagues.response[0].league.logo}>
-              </div>
-              <div id="champion">
+                </div>
+                <div id="champion">
               </div>`;
 
             //Render the last champion team logo
@@ -139,52 +137,66 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
   });
 
 function renderStandingsTable() {
-  // let i=0
-  // while (i>6) {
-  //   document.querySelector('.content').children[i].remove()
-  //   i--
-  // }
+  //Verify there is no table prior appending it
   if (!!document.querySelector("#standings")) {
     document.querySelector("#standings").remove();
   }
+  //Creation of the table headers
   document
     .querySelector(".content")
     .appendChild(document.createElement("table"))
     .setAttribute("id", "standings");
   document
-    .querySelector("#standings")
-    .appendChild(document.createElement("thead")).className = "table-head";
+    .querySelector("#standings").appendChild(document.createElement('thead')).className = 'table-head'
   document
-    .querySelector(".table-head")
-    .appendChild(document.createElement("tr")).className = "headers";
+    .querySelector("#standings thead")
+    .innerHTML =
+      `<tr>
+        <th>Pos</th>
+        <td id = "logos-header"> </td>
+        <th>Team</th>
+        <th>P</th>
+        <th>W</th>
+        <th>D</th>
+        <th>L</th>
+        <th>GF</th>
+        <th>GA</th>
+        <th>+/-</th>
+        <th>PTS</th>
+      </tr>`
+  
+  //Creation of the table body
   document
-    .querySelector(".headers")
-    .appendChild(document.createElement("th")).textContent = "Pos";
-  document
-    .querySelector(".headers")
-    .appendChild(document.createElement("th")).textContent = "Team";
-  document
-    .querySelector(".headers")
-    .appendChild(document.createElement("th")).textContent = "P";
-  document
-    .querySelector(".headers")
-    .appendChild(document.createElement("th")).textContent = "W";
-  document
-    .querySelector(".headers")
-    .appendChild(document.createElement("th")).textContent = "D";
-  document
-    .querySelector(".headers")
-    .appendChild(document.createElement("th")).textContent = "L";
-  document
-    .querySelector(".headers")
-    .appendChild(document.createElement("th")).textContent = "GF";
-  document
-    .querySelector(".headers")
-    .appendChild(document.createElement("th")).textContent = "GA";
-  document
-    .querySelector(".headers")
-    .appendChild(document.createElement("th")).textContent = "+/-";
-  document
-    .querySelector(".headers")
-    .appendChild(document.createElement("th")).textContent = "PTS";
+    .querySelector("#standings").appendChild(document.createElement('tbody'))
+  
+  let leagueId = document.querySelector(
+    "#league-champion h3:first-of-type"
+  ).id;  
+  let standingsData =  document
+    .querySelector("#standings tbody")
+  let season = document.querySelector("select");
+  //Fetching to get the standings
+  fetch(`https://v3.football.api-sports.io/standings?league=${leagueId}&season=${season.value}`, apiCongigObj)
+    .then(resp => resp.json())
+    .then(standings => {
+      let standingsDataBody = ""
+      console.log(standings.response[0].league.standings[0].length)
+      for (let i=0; i<standings.response[0].league.standings[0].length; i++) {
+        standingsDataBody += 
+        `<tr>
+          <td>${standings.response[0].league.standings[0][i].rank}</td>
+          <td><img src = ${standings.response[0].league.standings[0][i].team.logo}></td>
+          <td>${standings.response[0].league.standings[0][i].team.name}</td>
+          <td>${standings.response[0].league.standings[0][i].all.played}</td>
+          <td>${standings.response[0].league.standings[0][i].all.win}</td>
+          <td>${standings.response[0].league.standings[0][i].all.draw}</td>
+          <td>${standings.response[0].league.standings[0][i].all.lose}</td>
+          <td>${standings.response[0].league.standings[0][i].all.goals.for}</td>
+          <td>${standings.response[0].league.standings[0][i].all.goals.against}</td>
+          <td>${standings.response[0].league.standings[0][i].goalsDiff}</td>
+          <td>${standings.response[0].league.standings[0][i].points}</td>
+        </tr>`
+      }
+      standingsData.innerHTML = standingsDataBody
+    })
 }
