@@ -37,7 +37,7 @@ li img {
   text-align: center;
 }
 
-.content #standings {
+.content #standings, .content #top-scorers {
   margin-left: auto;
   margin-right: auto;
 }

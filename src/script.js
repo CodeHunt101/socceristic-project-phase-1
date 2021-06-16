@@ -107,6 +107,7 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
                 <img src=${standings.response[0].league.standings[0][0].team.logo}>`;
                 //Render Table & Standings last season
                 renderStandingsTable();
+                renderTopScorers()
               });
           });
       });
@@ -132,6 +133,7 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
 
           //Render Table & Standings
           renderStandingsTable();
+          renderTopScorers()
         });
     });
   });
@@ -153,7 +155,7 @@ function renderStandingsTable() {
     .innerHTML =
       `<tr>
         <th>Pos</th>
-        <td id = "logos-header"> </td>
+        <th class = "logos-header"> </th>
         <th>Team</th>
         <th>P</th>
         <th>W</th>
@@ -180,13 +182,12 @@ function renderStandingsTable() {
     .then(resp => resp.json())
     .then(standings => {
       let standingsDataBody = ""
-      console.log(standings.response[0].league.standings[0].length)
       for (let i=0; i<standings.response[0].league.standings[0].length; i++) {
         standingsDataBody += 
         `<tr>
           <td>${standings.response[0].league.standings[0][i].rank}</td>
           <td><img src = ${standings.response[0].league.standings[0][i].team.logo}></td>
-          <td>${standings.response[0].league.standings[0][i].team.name}</td>
+          <td team-id = "${standings.response[0].league.standings[0][i].team.id}">${standings.response[0].league.standings[0][i].team.name}</td>
           <td>${standings.response[0].league.standings[0][i].all.played}</td>
           <td>${standings.response[0].league.standings[0][i].all.win}</td>
           <td>${standings.response[0].league.standings[0][i].all.draw}</td>
@@ -198,5 +199,63 @@ function renderStandingsTable() {
         </tr>`
       }
       standingsData.innerHTML = standingsDataBody
+    })
+}
+
+function renderTopScorers() {
+  if (!!document.querySelector("#top-scorers-title")) {
+    document.querySelector("#top-scorers-title").remove();
+  }
+  
+  document
+    .querySelector(".content")
+    .appendChild(document.createElement("h3"))
+    .setAttribute('id', 'top-scorers-title')
+  
+  document.querySelector("#top-scorers-title").textContent = 'Top 5 Scorers'
+  
+  //Verify there is no table prior appending it
+  if (!!document.querySelector("#top-scorers")) {
+    document.querySelector("#top-scorers").remove();
+  }
+  //Creation of the table headers
+  document
+    .querySelector(".content")
+    .appendChild(document.createElement("table"))
+    .setAttribute("id", "top-scorers");
+    document
+    .querySelector("#top-scorers").appendChild(document.createElement('thead')).className = 'table-head'
+    document
+    .querySelector("#top-scorers thead")
+    .innerHTML =
+      `<tr>
+        <th class = "logos-header"> </th>
+        <th>Name</th>
+        <th>Goals</th>
+      </tr>`
+    //Creation of the table body
+    document
+    .querySelector("#top-scorers").appendChild(document.createElement('tbody'))
+    let leagueId = document.querySelector(
+      "#league-champion h3:first-of-type"
+    ).id; 
+    let season = document.querySelector("select");
+    let topScorersData =  document
+    .querySelector("#top-scorers tbody")
+    //Fetching to get the standings
+    fetch(`https://v3.football.api-sports.io/players/topscorers?league=${leagueId}&season=${season.value}`, apiCongigObj)
+    .then(resp => resp.json())
+    .then(topScorers => {
+      
+      let topScorersDataBody = ""
+      for (let i=0; i<5; i++) {
+        topScorersDataBody += 
+        `<tr>
+          <td><img src = ${topScorers.response[i].statistics[0].team.logo}></td>
+          <td>${topScorers.response[i].player.name}</td>
+          <td>${topScorers.response[i].statistics[0].goals.total}</td>
+        </tr>`
+      }
+      topScorersData.innerHTML = topScorersDataBody
     })
 }
