@@ -2,7 +2,8 @@ const countryTargets = [
   "Germany",
   "Italy",
   "England",
-  "Spain"
+  "Spain",
+  "France"
 ];
 const apiCongigObj = {
   method: "GET",
@@ -133,7 +134,7 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
 
           //Render Table & Standings
           renderStandingsTable();
-          renderTopScorers()
+          renderTopScorers()         
         });
     });
   });
@@ -165,6 +166,7 @@ function renderStandingsTable() {
         <th>GA</th>
         <th>+/-</th>
         <th>PTS</th>
+        <th>Last 5</th
       </tr>`
   
   //Creation of the table body
@@ -187,7 +189,7 @@ function renderStandingsTable() {
         `<tr>
           <td>${standings.response[0].league.standings[0][i].rank}</td>
           <td><img src = ${standings.response[0].league.standings[0][i].team.logo}></td>
-          <td team-id = "${standings.response[0].league.standings[0][i].team.id}">${standings.response[0].league.standings[0][i].team.name}</td>
+          <td id = "team-${standings.response[0].league.standings[0][i].team.id}" class = "team-name">${standings.response[0].league.standings[0][i].team.name}</td>
           <td>${standings.response[0].league.standings[0][i].all.played}</td>
           <td>${standings.response[0].league.standings[0][i].all.win}</td>
           <td>${standings.response[0].league.standings[0][i].all.draw}</td>
@@ -196,9 +198,17 @@ function renderStandingsTable() {
           <td>${standings.response[0].league.standings[0][i].all.goals.against}</td>
           <td>${standings.response[0].league.standings[0][i].goalsDiff}</td>
           <td>${standings.response[0].league.standings[0][i].points}</td>
+          <td>
+            ${last5(standings.response[0].league.standings[0][i].form)[0]}
+            ${last5(standings.response[0].league.standings[0][i].form)[1]}
+            ${last5(standings.response[0].league.standings[0][i].form)[2]}
+            ${last5(standings.response[0].league.standings[0][i].form)[3]}
+            ${last5(standings.response[0].league.standings[0][i].form)[4]}
+          <td>
         </tr>`
       }
       standingsData.innerHTML = standingsDataBody
+      renderCoachAndVenue()
     })
 }
 
@@ -244,18 +254,67 @@ function renderTopScorers() {
     .querySelector("#top-scorers tbody")
     //Fetching to get the standings
     fetch(`https://v3.football.api-sports.io/players/topscorers?league=${leagueId}&season=${season.value}`, apiCongigObj)
-    .then(resp => resp.json())
-    .then(topScorers => {
-      
-      let topScorersDataBody = ""
-      for (let i=0; i<5; i++) {
-        topScorersDataBody += 
-        `<tr>
-          <td><img src = ${topScorers.response[i].statistics[0].team.logo}></td>
-          <td>${topScorers.response[i].player.name}</td>
-          <td>${topScorers.response[i].statistics[0].goals.total}</td>
-        </tr>`
+      .then(resp => resp.json())
+      .then(topScorers => {
+        let topScorersDataBody = ""
+        for (let i=0; i<5; i++) {
+          topScorersDataBody += 
+          `<tr>
+            <td><img src = ${topScorers.response[i].statistics[0].team.logo}></td>
+            <td>${topScorers.response[i].player.name}</td>
+            <td>${topScorers.response[i].statistics[0].goals.total}</td>
+          </tr>`
+        }
+        topScorersData.innerHTML = topScorersDataBody
+      })
+}
+
+function renderCoachAndVenue() {
+  document.querySelectorAll('#standings tr .team-name')
+  .forEach((team)=> {
+    team.addEventListener('click', ()=> {
+      //Remove country and team text requests if exist
+      if (!!document.querySelector("#coach p")) {
+        document.querySelector('#coach p').remove()
       }
-      topScorersData.innerHTML = topScorersDataBody
+      if (!!document.querySelector("#venue p")) {
+        document.querySelector('#venue p').remove()
+      }
+      //Verify there is no images or names prior appending them
+      if (!!document.querySelector("#coach img")) {
+        document.querySelector("#coach img").remove();
+      }
+      if (!!document.querySelector("#venue img")) {
+        document.querySelector("#venue img").remove();
+      }
+      //Fetch coach
+      console.log(`https://v3.football.api-sports.io/coachs?team=${team.id.split('-')[1]}`)
+      fetch(`https://v3.football.api-sports.io/coachs?team=${team.id.split('-')[1]}`,apiCongigObj)
+        .then(resp => resp.json())
+        .then(coaches => {
+          document.querySelector('#coach').appendChild(document.createElement('img')).setAttribute('src',`${coaches.response[0].photo}`)
+          document.querySelector('#coach').appendChild(document.createElement('p')).textContent = `${coaches.response[0].name}`
+        })
+      //Fetch team venue
+      fetch(`https://v3.football.api-sports.io/teams?id=${team.id.split('-')[1]}`,apiCongigObj)
+        .then(resp => resp.json())
+        .then(teamInfo => {
+          document.querySelector('#venue').appendChild(document.createElement('img')).setAttribute('src',`${teamInfo.response[0].venue.image}`)
+          document.querySelector('#venue').appendChild(document.createElement('p')).textContent = `${teamInfo.response[0].venue.name}`
+        })
     })
+  })
+}
+function last5(results) {
+  //Returns image link related to the result of the match
+  return results.split('').map(char => {
+    switch (char) {
+      case 'W': char = '<img src="./img/win.svg">'
+        break
+      case 'D': char = '<img src="./img/draw.svg">'
+        break
+      case 'L': char = '<img src="./img/lose.svg">'
+    }
+    return char
+  })
 }

@@ -21,7 +21,7 @@ body {
 }
 #list-countries li {
   list-style-type: none;
-  width: 60%;
+  width: 70%;
 }
 .country-name {
   vertical-align: 10px;
@@ -59,6 +59,10 @@ select {
 td img {
   width: 20px;
   justify-content: center;
+}
+/* Right sidebar */
+#venue img {
+  width: 350px;
 }
 
 /* Fade in effect to images */
