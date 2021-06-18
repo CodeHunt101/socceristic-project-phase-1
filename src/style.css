@@ -1,50 +1,32 @@
-body {
-  /* color: #389175;
-  background: #090b4a; */
-  color: #3e830e;
-  background: #f4fdf3;
+button {
+  margin:5px
 }
-/* Main container */
-#container {
-  display: flex;
-}
-.content,
-.sidebar#facts {
-  flex-grow: 2;
-}
-.sidebar#countries {
-  flex-grow: 1;
-}
-/* Left sidebar */
-#list-countries {
-  padding-inline-start: 10px;
-}
-#list-countries li {
-  list-style-type: none;
-  width: 70%;
-}
-.country-name {
-  vertical-align: 10px;
-  margin-left: 10px;
-  font-weight: bolder;
-}
-li img {
+button img {
   width: 40px;
 }
-/* Middle area */
-.content {
-  flex-grow: 4;
-  text-align: center;
-}
 
-.content #standings, .content #top-scorers {
+.content #standings {
+  width: auto;
   margin-left: auto;
   margin-right: auto;
 }
 
-.content h2, label,
-select {
+#top-scorers-container {
+  display: flex;
+  justify-content: center;
+}
+
+#top-scorers {
+  width: auto;
+}
+
+.content h2, label {
   display: none;
+}
+
+select#season {
+  display: none;
+  width: auto;
 }
 
 #league-champion {

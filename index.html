@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
+    <meta charset="utf-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <!-- Bootstrap mobile responsive -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="src/style.css" />
     <title>Major european soccer leagues</title>
     <script type="text/javascript" src="src/script.js" defer></script>
-    <!--executes JS code after the HTML is parsed-->
+    <!--executes JS code after the HTML is parsed -->
   </head>
   <body>
     <h1>Major european soccer leagues statistics</h1>
-    <div id="container">
-      <div class="sidebar" id="countries">
+    <div id="container" class= "row">
+      <div class="sidebar col-md-2" id="countries">
         <h3>Countries</h3>
-        <ul id="list-countries"></ul>
+        <div id="list-countries" class = "btn-group-vertical"></div>
         <h3>Birthdays!</h3>
         <ul id="list-birthdays">
           <li>list of players</li>
         </ul>
       </div>
-      <div class="content">
+      <div class="content col-md-7">
         <label for="season">Season:</label>
-        <select name="season" id="season"></select>
+        <select name="season" id="season" class="form-select"></select>
       </div>
-      <div class="sidebar" id="facts">
+      <div class="sidebar col-md-3" id="facts">
         <section id="coach">
           <h2>Coach</h2>
           <p>Please, select country and team</p>

@@ -2,8 +2,8 @@ const countryTargets = [
   "Germany",
   "Italy",
   "England",
+  "France",
   "Spain",
-  "France"
 ];
 const apiCongigObj = {
   method: "GET",
@@ -13,36 +13,24 @@ const apiCongigObj = {
   },
 };
 //Render list of countries and their flags
+let countriesList = document.querySelector('#list-countries')
 fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
   .then((response) => response.json())
   .then((country) => {
+    let countriesListBody = ''
     country.response.forEach((country) => {
       for (let i = 0; i < countryTargets.length; i++) {
         if (countryTargets[i] === country.name) {
-          document
-            .getElementById("list-countries")
-            .appendChild(document.createElement("li")).className = "country";
-          document
-            .getElementsByClassName("country")
-            [document.getElementsByClassName("country").length - 1].appendChild(
-              document.createElement("span")
-            ).className = "country-flag";
-          document
-            .getElementsByClassName("country-flag")
-            [
-              document.getElementsByClassName("country-flag").length - 1
-            ].appendChild(document.createElement("img"))
-            .setAttribute("src", country.flag);
-          document
-            .getElementsByClassName("country")
-            [document.getElementsByClassName("country").length - 1].appendChild(
-              document.createElement("span")
-            ).className = "country-name";
-          document.getElementsByClassName("country-name")[
-            document.getElementsByClassName("country-name").length - 1
-          ].textContent = countryTargets[i];
+          countriesListBody += 
+          `
+          <button class= "country btn btn-info">
+            <img src=${country.flag} class = "rounded-circle">
+            <span class="country-name">${countryTargets[i]}</span>
+          </button>
+          `
         }
       }
+      countriesList.innerHTML = countriesListBody
     });
     const countries = document.getElementsByClassName("country");
     for (const country of countries) {
@@ -57,7 +45,7 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
         document.querySelector("label").style.display = "inline";
         document.querySelector("select").style.display = "inline";
         fetch(
-          `https://v3.football.api-sports.io/leagues?country=${country.innerText}`,
+          `https://v3.football.api-sports.io/leagues?country=${country.children[1].innerText}`,
           apiCongigObj
         )
           .then((resp) => resp.json())
@@ -87,7 +75,7 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
             ).innerHTML = `
               <div id="league">
                 <h3 id=${leagues.response[0].league.id}>${leagues.response[0].league.name}</h3>
-                <img src=${leagues.response[0].league.logo}>
+                <img src=${leagues.response[0].league.logo} class = "rounded">
                 </div>
                 <div id="champion">
               </div>`;
@@ -109,7 +97,7 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
                 //Render Table & Standings last season
                 renderStandingsTable();
                 renderTopScorers()
-              });
+              }).catch(() => alert('Not yet available information for this season'))
           });
       });
     }
@@ -135,7 +123,7 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
           //Render Table & Standings
           renderStandingsTable();
           renderTopScorers()         
-        });
+        }).catch(() => alert('Not yet available information for this season'))
     });
   });
 
@@ -149,6 +137,8 @@ function renderStandingsTable() {
     .querySelector(".content")
     .appendChild(document.createElement("table"))
     .setAttribute("id", "standings");
+  document
+    .querySelector("#standings").className = 'table table-striped table-hover .table-condensed table-responsive'
   document
     .querySelector("#standings").appendChild(document.createElement('thead')).className = 'table-head'
   document
@@ -204,25 +194,22 @@ function renderStandingsTable() {
             ${last5(standings.response[0].league.standings[0][i].form)[2]}
             ${last5(standings.response[0].league.standings[0][i].form)[3]}
             ${last5(standings.response[0].league.standings[0][i].form)[4]}
-          <td>
+          </td>
         </tr>`
       }
       standingsData.innerHTML = standingsDataBody
       renderCoachAndVenue()
-    })
+    }).catch(() => alert('Not yet available information'))
 }
 
 function renderTopScorers() {
-  if (!!document.querySelector("#top-scorers-title")) {
-    document.querySelector("#top-scorers-title").remove();
+  if (!!document.querySelector("#top-scorers-container")) {
+    document.querySelector("#top-scorers-container").remove();
   }
-  
   document
     .querySelector(".content")
-    .appendChild(document.createElement("h3"))
-    .setAttribute('id', 'top-scorers-title')
-  
-  document.querySelector("#top-scorers-title").textContent = 'Top 5 Scorers'
+    .appendChild(document.createElement("div"))
+    .setAttribute("id", "top-scorers-container");
   
   //Verify there is no table prior appending it
   if (!!document.querySelector("#top-scorers")) {
@@ -230,19 +217,21 @@ function renderTopScorers() {
   }
   //Creation of the table headers
   document
-    .querySelector(".content")
+    .querySelector("#top-scorers-container")
     .appendChild(document.createElement("table"))
     .setAttribute("id", "top-scorers");
-    document
+  document
+    .querySelector("#top-scorers").className = 'table table-striped table-hover .table-condensed'
+  document
     .querySelector("#top-scorers").appendChild(document.createElement('thead')).className = 'table-head'
-    document
+  document
     .querySelector("#top-scorers thead")
-    .innerHTML =
-      `<tr>
-        <th class = "logos-header"> </th>
-        <th>Name</th>
-        <th>Goals</th>
-      </tr>`
+  .innerHTML =
+    `<tr>
+      <th class = "logos-header"> </th>
+      <th>Top 5 Scorers</th>
+      <th>Goals</th>
+    </tr>`
     //Creation of the table body
     document
     .querySelector("#top-scorers").appendChild(document.createElement('tbody'))
@@ -266,42 +255,50 @@ function renderTopScorers() {
           </tr>`
         }
         topScorersData.innerHTML = topScorersDataBody
-      })
+      }).catch(() => alert('Not yet available information for top scorers'))
 }
 
 function renderCoachAndVenue() {
-  document.querySelectorAll('#standings tr .team-name')
+  document.querySelectorAll('#standings tbody tr')
   .forEach((team)=> {
     team.addEventListener('click', ()=> {
-      //Remove country and team text requests if exist
-      if (!!document.querySelector("#coach p")) {
-        document.querySelector('#coach p').remove()
-      }
-      if (!!document.querySelector("#venue p")) {
-        document.querySelector('#venue p').remove()
-      }
-      //Verify there is no images or names prior appending them
-      if (!!document.querySelector("#coach img")) {
-        document.querySelector("#coach img").remove();
-      }
-      if (!!document.querySelector("#venue img")) {
-        document.querySelector("#venue img").remove();
-      }
+      
       //Fetch coach
-      console.log(`https://v3.football.api-sports.io/coachs?team=${team.id.split('-')[1]}`)
-      fetch(`https://v3.football.api-sports.io/coachs?team=${team.id.split('-')[1]}`,apiCongigObj)
+      fetch(`https://v3.football.api-sports.io/coachs?team=${team.children[2].id.split('-')[1]}`,apiCongigObj)
         .then(resp => resp.json())
         .then(coaches => {
+          //Remove country and team text requests if exist
+          if (!!document.querySelector("#coach p")) {
+            document.querySelector('#coach p').remove()
+          }
+          
+          //Verify there is no images or names prior appending them
+          if (!!document.querySelector('#coach img')) {
+            document.querySelector("#coach img").remove();
+          }
+          
           document.querySelector('#coach').appendChild(document.createElement('img')).setAttribute('src',`${coaches.response[0].photo}`)
+          document.querySelector("#coach img").className = "rounded-circle"
           document.querySelector('#coach').appendChild(document.createElement('p')).textContent = `${coaches.response[0].name}`
-        })
+        }).catch(() => alert('Not yet available information for coach'))
       //Fetch team venue
-      fetch(`https://v3.football.api-sports.io/teams?id=${team.id.split('-')[1]}`,apiCongigObj)
+      fetch(`https://v3.football.api-sports.io/teams?id=${team.children[2].id.split('-')[1]}`,apiCongigObj)
         .then(resp => resp.json())
         .then(teamInfo => {
+          //Remove country and team text requests if exist
+          
+          if (!!document.querySelector("#venue p")) {
+            document.querySelector('#venue p').remove()
+          }
+          //Verify there is no images or names prior appending them
+          
+          if (!!document.querySelector("#venue img")) {
+            document.querySelector('#venue img').remove()
+          }
           document.querySelector('#venue').appendChild(document.createElement('img')).setAttribute('src',`${teamInfo.response[0].venue.image}`)
+          document.querySelector("#venue img").className = "rounded-circle"
           document.querySelector('#venue').appendChild(document.createElement('p')).textContent = `${teamInfo.response[0].venue.name}`
-        })
+        }).catch(() => alert('Not yet available information for venue'))
     })
   })
 }
