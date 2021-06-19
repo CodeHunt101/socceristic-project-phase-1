@@ -11,35 +11,37 @@
     <!--executes JS code after the HTML is parsed -->
   </head>
   <body>
-    <h1>SOCCERSITIC <sup>tm</sup> App!</h1>
-    <div id="container" class= "row">
-      <div class="sidebar" id="countries">
-        <h3>Pick a country:</h3>
-        <div id="list-countries" class = "btn"></div>
-      </div>
-      <div class="content col-md-9">
-        <label for="season">Season:</label>
-        <select name="season" id="season" class="form-select"></select>
-      </div>
-      <div class="sidebar col-md-3" id="facts">
-        <section id="coach">
-          <h2>Coach</h2>
-          <p>Please, select country and team</p>
-          <div class="spinner-border" role="status">
-            <span class="sr-only"></span>
-          </div>
-        </section>
-        <section id="venue">
-          <h2>Venue</h2>
-          <p>Please, select country and team</p>
-          <div class="spinner-border" role="status">
-            <span class="sr-only"></span>
-          </div>
-        </section>
-        <h2>Total goals of the season</h2>
-        <p>some number</p>
-        <h2>Average goals of the season</h2>
-        <p>some number</p>
+    <div id= "main-container">
+      <h1>SOCCERSITIC <sup>tm</sup> App!</h1>
+      <div id="container" class= "row">
+        <div class="sidebar" id="countries">
+          <h3>Pick a country:</h3>
+          <div id="list-countries" class = "btn"></div>
+        </div>
+        <div class="content col-md-8">
+          <label for="season">Season:</label>
+          <select name="season" id="season" class="form-select"></select>
+        </div>
+        <div class="sidebar col-md-4" id="facts">
+          <section id="coach">
+            <h2>Coach</h2>
+            <p>Please, select country and team</p>
+            <div class="spinner-border" role="status">
+              <span class="sr-only"></span>
+            </div>
+          </section>
+          <section id="venue">
+            <h2>Venue</h2>
+            <p>Please, select country and team</p>
+            <div class="spinner-border" role="status">
+              <span class="sr-only"></span>
+            </div>
+          </section>
+          <h2>Total goals of the season</h2>
+          <p>some number</p>
+          <h2>Average goals of the season</h2>
+          <p>some number</p>
+        </div>
       </div>
     </div>
   </body>

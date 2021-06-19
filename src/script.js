@@ -15,7 +15,7 @@ const apiCongigObj = {
   },
 };
 //Render list of countries and their flags
-let countriesList = document.querySelector('#list-countries')
+const countriesList = document.querySelector('#list-countries')
 fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
   .then((response) => response.json())
   .then((country) => {
@@ -37,6 +37,9 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
     const countries = document.getElementsByClassName("country");
     for (const country of countries) {
       country.addEventListener("click", function (e) {
+        rightSidebarDataOut()
+        spinnerDisplayer('on','hidden','#coach')
+        spinnerDisplayer('on','hidden','#venue')
         //Make sure it deletes all elements from content div except the dropdown
         let i = document.querySelector(".content").children.length - 1;
         while (i > 1) {
@@ -99,13 +102,18 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
                 //Render Table & Standings last season
                 renderStandingsTable();
                 renderTopScorers()
-              }).catch(() => alert('Not yet available information for this season'))
+              })
+              .catch(contentCatchError)
           });
+        // rightSidebarDataOut()
       });
     }
     //Render champion team logo
     let season = document.querySelector("select");
     season.addEventListener("change", function () {
+      rightSidebarDataOut()
+      spinnerDisplayer('on','hidden','#coach')
+      spinnerDisplayer('on','hidden','#venue')
       if (!!document.querySelectorAll("#league-champion img")[1]) {
         document.querySelectorAll("#league-champion img")[1].remove();
       }
@@ -114,8 +122,7 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
       ).id;
       fetch(
         `https://v3.football.api-sports.io/standings?league=${leagueId}&season=${season.value}`,
-        apiCongigObj
-      )
+        apiCongigObj)
         .then((resp) => resp.json())
         .then((standings) => {
           document.querySelector("#champion").innerHTML = `
@@ -125,7 +132,9 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
           //Render Table & Standings
           renderStandingsTable();
           renderTopScorers()         
-        }).catch(() => alert('Not yet available information for this season'))
+        })
+        .catch(contentCatchError)
+      
     });
   });
 
@@ -264,56 +273,37 @@ function renderCoachAndVenue() {
   document.querySelectorAll('#standings tbody tr')
   .forEach((team)=> {
     team.addEventListener('click', ()=> {
-      //Remove country and team text requests if exist
-      if (!!document.querySelector("#coach p")) {
-        document.querySelector('#coach p').remove()
-      }
-      //Verify there is no images or names prior appending them
-      if (!!document.querySelector('#coach img')) {
-        document.querySelector("#coach img").remove();
-      }
+      
+      rightSidebarDataOut()
       //Prevent element to be event listened while fetching
       team.style.pointerEvents = 'none' 
       //Display loading spinner
-      spinnerDisplayer('on','#coach')
+      spinnerDisplayer('on','visible','#coach')
       //Fetch coach
       fetch(`https://v3.football.api-sports.io/coachs?team=${team.children[2].id.split('-')[1]}`,apiCongigObj)
         .then(resp => resp.json())
         .then(coaches => {
-          // document.querySelector('#coach').innerHTML = 
-          // `<h2>Coach</h2>
-          // <img src=${coaches.response[0].photo} class = "rounded-circle">
-          // <h6>${coaches.response[0].name}</h6>`
           document.querySelector('#coach').appendChild(document.createElement('img')).setAttribute('src',`${coaches.response[0].photo}`)
           document.querySelector("#coach img").className = "rounded-circle"
           document.querySelector('#coach').appendChild(document.createElement('p')).textContent = `${coaches.response[0].name}`
           team.style.pointerEvents = 'auto' //Allows element to be event listened after fetiching
           //Don't display loading spinner
-          spinnerDisplayer('off','#coach')
+          spinnerDisplayer('off','hidden','#coach')
         })
       
-      //Remove country and team text requests if exist
-      if (!!document.querySelector("#venue p")) {
-        document.querySelector('#venue p').remove()
-      }
-      //Verify there is no images or names prior appending them
-      if (!!document.querySelector("#venue img")) {
-        document.querySelector('#venue img').remove()
-      }
+      rightSidebarDataOut()
       //Display loading spinner
-      spinnerDisplayer('on','#venue')
+      spinnerDisplayer('on','visible','#venue')
        //Fetch team venue
       fetch(`https://v3.football.api-sports.io/teams?id=${team.children[2].id.split('-')[1]}`,apiCongigObj)
         .then(resp => resp.json())
         .then(teamInfo => {
-          
-          
           document.querySelector('#venue').appendChild(document.createElement('img')).setAttribute('src',`${teamInfo.response[0].venue.image}`)
-          document.querySelector("#venue img").className = "rounded-circle"
+          document.querySelector("#venue img").className = "rounded"
           document.querySelector('#venue').appendChild(document.createElement('p')).textContent = `${teamInfo.response[0].venue.name}`
           team.style.pointerEvents = 'auto' //Allows element to be event listened after fetiching
           //Don't display loading spinner
-          spinnerDisplayer('off','#venue')
+          spinnerDisplayer('off','hidden','#venue')
         })
     })
   })
@@ -331,12 +321,44 @@ function last5(results) {
     return char
   })
 }
-function spinnerDisplayer(mode,parentSelector) {
+function spinnerDisplayer(mode,visibility,parentSelector) {
+  //Displays or hides a loading spinner
   if (mode === 'on') {
     document.querySelector(`${parentSelector} .spinner-border`).style.display = 'block'
-    document.querySelector(`${parentSelector} .spinner-border`).style.visibility = 'visible'
+    document.querySelector(`${parentSelector} .spinner-border`).style.visibility = `${visibility}`
   } else if (mode === 'off') {
-    document.querySelector(`${parentSelector} .spinner-border`).style.visibility = 'visible'
+    document.querySelector(`${parentSelector} .spinner-border`).style.visibility = `${visibility}`
     document.querySelector(`${parentSelector} .spinner-border`).style.display = 'none'
+  }
+}
+function contentCatchError() {
+  //Removes required information that client must not see in case there isn't data to fetch
+  if (!!document.querySelector('#standings')) {
+    document.querySelector('#standings').nextSibling.remove()
+    document.querySelector('#standings').remove()
+  }
+  if (!!document.querySelector('#champion')) {
+    document.querySelector('#champion').innerHTML = ''
+  }
+  alert('COMING SOON!!!')
+}
+function rightSidebarDataOut() {
+  //Removes all the data from the right sidebar
+  
+  //Remove country and team text requests if exist
+  if (!!document.querySelector("#coach p")) {
+    document.querySelector('#coach p').remove()
+  }
+  //Verify there is no images or names prior appending them
+  if (!!document.querySelector('#coach img')) {
+    document.querySelector("#coach img").remove();
+  }
+  //Remove country and team text requests if exist
+  if (!!document.querySelector("#venue p")) {
+    document.querySelector('#venue p').remove()
+  }
+  //Verify there is no images or names prior appending them
+  if (!!document.querySelector("#venue img")) {
+    document.querySelector('#venue img').remove()
   }
 }

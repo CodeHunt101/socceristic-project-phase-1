@@ -1,10 +1,30 @@
 body{
   margin-left: 10%;
   margin-right: 10%;
+  background-image: url(../img/wallpapertip_soccer-wallpaper_1025669.jpeg);
+  /* Background image is centered vertically and horizontally at all times */
+  background-position: center center;
+  /* Background image doesn’t tile */
+  background-repeat: no-repeat;
+  /* Background image is fixed in the viewport so that it doesn’t move when
+  the content’s height is greater than the image’s height */
+  background-attachment: fixed;
+  /* This is what makes the background image rescale based
+  on the container’s size */
+  background-size: cover;
+  /* Set a background color that will be displayed
+  while the background image is loading */
+  background-color: #464646;
+  color: seashell;
+}
+
+
+#main-container{
+  background-color: rgba(0, 0, 0, 0.7);
 }
 h1 {
   text-align: center;
-  margin-top: 20px;
+  padding-top: 20px;
   margin-bottom: 20px;
   margin-left: auto;
   margin-right: auto;
@@ -22,7 +42,9 @@ button img {
   margin-left: auto;
   margin-right: auto;
 }
-
+th,td {
+  color:seashell
+}
 .content #standings {
   width: auto;
   margin-left: auto;
@@ -38,7 +60,7 @@ button img {
   width: auto;
 }
 
-.content h2, label {
+label {
   display: none;
 }
 
