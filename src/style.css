@@ -1,8 +1,26 @@
+body{
+  margin-left: 10%;
+  margin-right: 10%;
+}
+h1 {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+#list-countries {
+  display: flex;
+}
 button {
-  margin:5px
+  margin:5px;
+  width: 150px;
 }
 button img {
   width: 40px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .content #standings {
@@ -31,7 +49,7 @@ select#season {
 
 #league-champion {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
 }
 
 #league, #champion {
@@ -41,6 +59,15 @@ select#season {
 td img {
   width: 20px;
   justify-content: center;
+}
+/* Spinner borders subject to change their margin */
+#coach .spinner-border{
+  margin: 87px;
+  visibility: hidden;
+}
+#venue .spinner-border{
+  margin: 187px;
+  visibility: hidden;
 }
 /* Right sidebar */
 #venue img {
@@ -79,4 +106,3 @@ img {
   0% {opacity:0;}
   100% {opacity:1;}
 }
-

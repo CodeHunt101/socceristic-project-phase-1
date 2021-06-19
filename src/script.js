@@ -4,6 +4,8 @@ const countryTargets = [
   "England",
   "France",
   "Spain",
+  "Portugal",
+  "Netherlands",
 ];
 const apiCongigObj = {
   method: "GET",
@@ -262,43 +264,57 @@ function renderCoachAndVenue() {
   document.querySelectorAll('#standings tbody tr')
   .forEach((team)=> {
     team.addEventListener('click', ()=> {
-      
+      //Remove country and team text requests if exist
+      if (!!document.querySelector("#coach p")) {
+        document.querySelector('#coach p').remove()
+      }
+      //Verify there is no images or names prior appending them
+      if (!!document.querySelector('#coach img')) {
+        document.querySelector("#coach img").remove();
+      }
+      //Prevent element to be event listened while fetching
+      team.style.pointerEvents = 'none' 
+      //Display loading spinner
+      spinnerDisplayer('on','#coach')
       //Fetch coach
       fetch(`https://v3.football.api-sports.io/coachs?team=${team.children[2].id.split('-')[1]}`,apiCongigObj)
         .then(resp => resp.json())
         .then(coaches => {
-          //Remove country and team text requests if exist
-          if (!!document.querySelector("#coach p")) {
-            document.querySelector('#coach p').remove()
-          }
-          
-          //Verify there is no images or names prior appending them
-          if (!!document.querySelector('#coach img')) {
-            document.querySelector("#coach img").remove();
-          }
-          
+          // document.querySelector('#coach').innerHTML = 
+          // `<h2>Coach</h2>
+          // <img src=${coaches.response[0].photo} class = "rounded-circle">
+          // <h6>${coaches.response[0].name}</h6>`
           document.querySelector('#coach').appendChild(document.createElement('img')).setAttribute('src',`${coaches.response[0].photo}`)
           document.querySelector("#coach img").className = "rounded-circle"
           document.querySelector('#coach').appendChild(document.createElement('p')).textContent = `${coaches.response[0].name}`
-        }).catch(() => alert('Not yet available information for coach'))
-      //Fetch team venue
+          team.style.pointerEvents = 'auto' //Allows element to be event listened after fetiching
+          //Don't display loading spinner
+          spinnerDisplayer('off','#coach')
+        })
+      
+      //Remove country and team text requests if exist
+      if (!!document.querySelector("#venue p")) {
+        document.querySelector('#venue p').remove()
+      }
+      //Verify there is no images or names prior appending them
+      if (!!document.querySelector("#venue img")) {
+        document.querySelector('#venue img').remove()
+      }
+      //Display loading spinner
+      spinnerDisplayer('on','#venue')
+       //Fetch team venue
       fetch(`https://v3.football.api-sports.io/teams?id=${team.children[2].id.split('-')[1]}`,apiCongigObj)
         .then(resp => resp.json())
         .then(teamInfo => {
-          //Remove country and team text requests if exist
           
-          if (!!document.querySelector("#venue p")) {
-            document.querySelector('#venue p').remove()
-          }
-          //Verify there is no images or names prior appending them
           
-          if (!!document.querySelector("#venue img")) {
-            document.querySelector('#venue img').remove()
-          }
           document.querySelector('#venue').appendChild(document.createElement('img')).setAttribute('src',`${teamInfo.response[0].venue.image}`)
           document.querySelector("#venue img").className = "rounded-circle"
           document.querySelector('#venue').appendChild(document.createElement('p')).textContent = `${teamInfo.response[0].venue.name}`
-        }).catch(() => alert('Not yet available information for venue'))
+          team.style.pointerEvents = 'auto' //Allows element to be event listened after fetiching
+          //Don't display loading spinner
+          spinnerDisplayer('off','#venue')
+        })
     })
   })
 }
@@ -314,4 +330,13 @@ function last5(results) {
     }
     return char
   })
+}
+function spinnerDisplayer(mode,parentSelector) {
+  if (mode === 'on') {
+    document.querySelector(`${parentSelector} .spinner-border`).style.display = 'block'
+    document.querySelector(`${parentSelector} .spinner-border`).style.visibility = 'visible'
+  } else if (mode === 'off') {
+    document.querySelector(`${parentSelector} .spinner-border`).style.visibility = 'visible'
+    document.querySelector(`${parentSelector} .spinner-border`).style.display = 'none'
+  }
 }
