@@ -101,15 +101,13 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
                 <img src=${standings.response[0].league.standings[0][0].team.logo}>`;
                 //Render Table & Standings last season
                 renderStandingsTable();
-                renderTopScorers()
               })
               .catch(contentCatchError)
           });
-        // rightSidebarDataOut()
       });
     }
     //Render champion team logo
-    let season = document.querySelector("select");
+    const season = document.querySelector("select");
     season.addEventListener("change", function () {
       rightSidebarDataOut()
       spinnerDisplayer('on','hidden','#coach')
@@ -128,20 +126,18 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
           document.querySelector("#champion").innerHTML = `
           <h3>1st Place</h3>
           <img src=${standings.response[0].league.standings[0][0].team.logo}>`;
-
           //Render Table & Standings
           renderStandingsTable();
-          renderTopScorers()         
+          // renderTopScorers()         
         })
         .catch(contentCatchError)
-      
     });
   });
-
 function renderStandingsTable() {
   //Verify there is no table prior appending it
   if (!!document.querySelector("#standings")) {
-    document.querySelector("#standings").remove();
+    document.querySelector("#standings").remove()
+    document.querySelector("#standings-qualifications").remove();
   }
   //Creation of the table headers
   document
@@ -184,13 +180,14 @@ function renderStandingsTable() {
   fetch(`https://v3.football.api-sports.io/standings?league=${leagueId}&season=${season.value}`, apiCongigObj)
     .then(resp => resp.json())
     .then(standings => {
+      console.log(standings.response[0].league.standings[0])
       let standingsDataBody = ""
       for (let i=0; i<standings.response[0].league.standings[0].length; i++) {
         standingsDataBody += 
         `<tr>
-          <td>${standings.response[0].league.standings[0][i].rank}</td>
+          <td id = "rank">${standings.response[0].league.standings[0][i].rank}</td>
           <td><img src = ${standings.response[0].league.standings[0][i].team.logo}></td>
-          <td id = "team-${standings.response[0].league.standings[0][i].team.id}" class = "team-name">${standings.response[0].league.standings[0][i].team.name}</td>
+          <td id = "team-${standings.response[0].league.standings[0][i].team.id}" class = "team-name"><b>${standings.response[0].league.standings[0][i].team.name}</b></td>
           <td>${standings.response[0].league.standings[0][i].all.played}</td>
           <td>${standings.response[0].league.standings[0][i].all.win}</td>
           <td>${standings.response[0].league.standings[0][i].all.draw}</td>
@@ -209,8 +206,32 @@ function renderStandingsTable() {
         </tr>`
       }
       standingsData.innerHTML = standingsDataBody
+      for (let i=0; i<standings.response[0].league.standings[0].length; i++) {
+        if (typeof(standings.response[0].league.standings[0][i].description) === 'string'){
+          if (!!standings.response[0].league.standings[0][i].description.match('Champions League')) {
+            document.querySelectorAll('tr #rank')[i].style.background = 'green'
+          }
+          if (!!standings.response[0].league.standings[0][i].description.match('Europa League')){
+            document.querySelectorAll('tr #rank')[i].style.background = 'orange'
+          }
+          if (!!standings.response[0].league.standings[0][i].description.match('Relegation')){
+            document.querySelectorAll('tr #rank')[i].style.background = 'red'
+          }
+        }
+      }
+      //Add table footer tags
+      document
+      .querySelector("#standings")
+      .insertAdjacentHTML('afterend', 
+      `<ul id= 'standings-qualifications'>
+        <li id= "champions-league"> Qualify or play-offs to Champions League</li>
+        <li id= "europa-league">Qualify or play-offs to Europa League</li>
+        <li id= "relegation">Relegation or play-offs to stay in 1st division</li>
+      </ul>`)
+      renderTopScorers()  
       renderCoachAndVenue()
-    }).catch(() => alert('Not yet available information'))
+    })
+    .catch(() => alert('Not yet available information'))
 }
 
 function renderTopScorers() {
@@ -221,7 +242,6 @@ function renderTopScorers() {
     .querySelector(".content")
     .appendChild(document.createElement("div"))
     .setAttribute("id", "top-scorers-container");
-  
   //Verify there is no table prior appending it
   if (!!document.querySelector("#top-scorers")) {
     document.querySelector("#top-scorers").remove();
@@ -268,7 +288,6 @@ function renderTopScorers() {
         topScorersData.innerHTML = topScorersDataBody
       }).catch(() => alert('Not yet available information for top scorers'))
 }
-
 function renderCoachAndVenue() {
   document.querySelectorAll('#standings tbody tr')
   .forEach((team)=> {

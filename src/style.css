@@ -1,6 +1,6 @@
-body{
-  margin-left: 10%;
-  margin-right: 10%;
+body {
+  margin-left: 9%;
+  margin-right: 9%;
   background-image: url(../img/wallpapertip_soccer-wallpaper_1025669.jpeg);
   /* Background image is centered vertically and horizontally at all times */
   background-position: center center;
@@ -17,10 +17,19 @@ body{
   background-color: #464646;
   color: seashell;
 }
+a {
+  color: white;
+  text-decoration: none;
+  float:right;
+  margin-right: 5px;
+}
+a:hover {
+  color:brown;
+}
 
-
-#main-container{
+#main-container {
   background-color: rgba(0, 0, 0, 0.7);
+  padding-left: 20px;
 }
 h1 {
   text-align: center;
@@ -29,12 +38,17 @@ h1 {
   margin-left: auto;
   margin-right: auto;
 }
+/* ::::::::::::::::Top sidebar:::::::::::::::: */
 #list-countries {
   display: flex;
+  justify-content: center;
 }
 button {
-  margin:5px;
+  margin: 5px;
   width: 150px;
+}
+button.country:hover {
+  color :indianred;
 }
 button img {
   width: 40px;
@@ -42,60 +56,97 @@ button img {
   margin-left: auto;
   margin-right: auto;
 }
-th,td {
-  color:seashell
+/* ::::::::::::::::Main content:::::::::::::::: */
+label {
+  display: none;
+}
+select#season {
+  display: none;
+  width: auto;
+}
+#league img {
+  background: rgba(255, 255, 255, 0.4);
+}
+#league-champion {
+  display: flex;
+  justify-content: space-evenly;
+}
+#league,
+#champion {
+  margin: 5px;
+}
+th,
+td {
+  color: seashell;
 }
 .content #standings {
   width: auto;
   margin-left: auto;
   margin-right: auto;
 }
-
+#standings tbody tr:hover {
+  background-color: rgba(255, 255, 153,0.2);
+}
+#standings-qualifications {
+  list-style-type: none;
+}
+#champions-league {
+  background: green;
+  text-align: center;
+}
+#europa-league {
+  background: orange;
+  color: #464646;
+  text-align: center;
+}
+#relegation {
+  background: red;
+  text-align: center;
+}
 #top-scorers-container {
   display: flex;
   justify-content: center;
 }
-
 #top-scorers {
   width: auto;
 }
-
-label {
-  display: none;
-}
-
-select#season {
-  display: none;
-  width: auto;
-}
-
-#league-champion {
-  display: flex;
-  justify-content: space-evenly;
-}
-
-#league, #champion {
-  margin: 5px
-}
-
 td img {
   width: 20px;
   justify-content: center;
 }
-/* Spinner borders subject to change their margin */
-#coach .spinner-border{
-  margin: 87px;
-  visibility: hidden;
+/* ::::::::::::::::Right sidebar:::::::::::::::: */
+#coach {
+  width: 150px;
+  height: 220px;
+  background-color: rgba(0, 0, 0, 0.2);
+  margin-top: 40px;
+  margin-bottom: 20px;
 }
-#venue .spinner-border{
-  margin: 187px;
-  visibility: hidden;
+#coach p,
+#venue p {
+  text-align: center;
 }
-/* Right sidebar */
+#venue {
+  width: 350px;
+  height: 330px;
+  background-color: rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
 #venue img {
   width: 350px;
 }
-
+/* Spinner borders subject to change their margin */
+#coach .spinner-border {
+  margin: auto;
+  margin-top: 75px;
+  visibility: hidden;
+}
+#venue .spinner-border {
+  margin: auto;
+  margin-top: 115px;
+  visibility: hidden;
+}
 /* Fade in effect to images */
 img {
   animation: fadeIn 5s;
@@ -105,26 +156,46 @@ img {
   -ms-animation: fadeIn 5s;
 }
 @keyframes fadeIn {
-  0% {opacity:0;}
-  100% {opacity:1;}
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @-moz-keyframes fadeIn {
-  0% {opacity:0;}
-  100% {opacity:1;}
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @-webkit-keyframes fadeIn {
-  0% {opacity:0;}
-  100% {opacity:1;}
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @-o-keyframes fadeIn {
-  0% {opacity:0;}
-  100% {opacity:1;}
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @-ms-keyframes fadeIn {
-  0% {opacity:0;}
-  100% {opacity:1;}
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
