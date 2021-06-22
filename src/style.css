@@ -103,7 +103,7 @@ td {
   background: red;
   text-align: center;
 }
-#top-scorers-container {
+#facts-container {
   display: flex;
   justify-content: center;
 }
