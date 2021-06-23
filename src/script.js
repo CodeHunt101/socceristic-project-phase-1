@@ -6,6 +6,7 @@ const countryTargets = [
   "Spain",
   "Portugal",
   "Netherlands",
+  "Brazil",
 ];
 const apiCongigObj = {
   method: "GET",
@@ -13,6 +14,7 @@ const apiCongigObj = {
     "x-rapidapi-host": "v3.football.api-sports.io",
     "x-rapidapi-key": "8bc0ad048d98ed6fa090704ed786ca23",
   },
+  redirect: 'follow'
 };
 //Render list of countries and their flags
 const countriesList = document.querySelector('#list-countries')
@@ -84,10 +86,10 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
                 </div>
                 <div id="champion">
               </div>`;
-
+              playerData()
             //Render the last champion team logo
-            let leagueId = leagues.response[0].league.id;
-            let season = document.querySelector("select");
+            const leagueId = leagues.response[0].league.id;
+            const season = document.querySelector("select");
             fetch(
               `https://v3.football.api-sports.io/standings?league=${leagueId}&season=${season.value}`,
               apiCongigObj
@@ -104,6 +106,10 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
               })
               .catch(contentCatchError)
           });
+        //Enable player lookup form
+        document.querySelector('#player-name').disabled = false
+        document.querySelector('#player button').disabled = false
+        
       });
     }
     //Render champion team logo
@@ -115,7 +121,7 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
       if (!!document.querySelectorAll("#league-champion img")[1]) {
         document.querySelectorAll("#league-champion img")[1].remove();
       }
-      let leagueId = document.querySelector(
+      const leagueId = document.querySelector(
         "#league-champion h3:first-of-type"
       ).id;
       fetch(
@@ -169,16 +175,17 @@ function renderStandingsTable() {
   document
     .querySelector("#standings").appendChild(document.createElement('tbody'))
   
-  let leagueId = document.querySelector(
+  const leagueId = document.querySelector(
     "#league-champion h3:first-of-type"
   ).id;  
-  let standingsData =  document
+  const standingsData =  document
     .querySelector("#standings tbody")
-  let season = document.querySelector("select");
+  const season = document.querySelector("select");
   //Fetching to get the standings
   fetch(`https://v3.football.api-sports.io/standings?league=${leagueId}&season=${season.value}`, apiCongigObj)
     .then(resp => resp.json())
     .then(standings => {
+      console.log
       let standingsDataBody = ""
       for (let i=0; i<standings.response[0].league.standings[0].length; i++) {
         standingsDataBody += 
@@ -195,11 +202,11 @@ function renderStandingsTable() {
           <td>${standings.response[0].league.standings[0][i].goalsDiff}</td>
           <td>${standings.response[0].league.standings[0][i].points}</td>
           <td>
-            ${last5(standings.response[0].league.standings[0][i].form)[0]}
-            ${last5(standings.response[0].league.standings[0][i].form)[1]}
-            ${last5(standings.response[0].league.standings[0][i].form)[2]}
-            ${last5(standings.response[0].league.standings[0][i].form)[3]}
-            ${last5(standings.response[0].league.standings[0][i].form)[4]}
+            ${last5(standings.response[0].league.standings[0][i].form)[0]===undefined ? '' : last5(standings.response[0].league.standings[0][i].form)[0]}
+            ${last5(standings.response[0].league.standings[0][i].form)[1]===undefined ? '' : last5(standings.response[0].league.standings[0][i].form)[1]}
+            ${last5(standings.response[0].league.standings[0][i].form)[2]===undefined ? '' : last5(standings.response[0].league.standings[0][i].form)[2]}
+            ${last5(standings.response[0].league.standings[0][i].form)[3]===undefined ? '' : last5(standings.response[0].league.standings[0][i].form)[3]}
+            ${last5(standings.response[0].league.standings[0][i].form)[4]===undefined ? '' : last5(standings.response[0].league.standings[0][i].form)[4]}
           </td>
         </tr>`
       }
@@ -263,11 +270,11 @@ function renderTopScorersAndFacts() {
   //Creation of the table body
   document
   .querySelector("#top-scorers").appendChild(document.createElement('tbody'))
-  let leagueId = document.querySelector(
+  const leagueId = document.querySelector(
     "#league-champion h3:first-of-type"
   ).id; 
-  let season = document.querySelector("select");
-  let topScorersData =  document
+  const season = document.querySelector("select");
+  const topScorersData =  document
   .querySelector("#top-scorers tbody")
   //Fetching to get the standings
   fetch(`https://v3.football.api-sports.io/players/topscorers?league=${leagueId}&season=${season.value}`, apiCongigObj)
@@ -288,9 +295,9 @@ function renderTopScorersAndFacts() {
   // renderLeagueFacts('largest_streak_wins','max')
   // renderLeagueFacts('largest_streak_draws','max')
   // renderLeagueFacts('largest_streak_loses','max')
-  renderLeagueFacts('penalty','max')
-  renderLeagueFacts('penalty','min')
-  renderLeagueFacts('clean_sheet','max')
+  // renderLeagueFacts('penalty','max')
+  // renderLeagueFacts('penalty','min')
+  // renderLeagueFacts('clean_sheet','max')
 }
 function renderLeagueFacts(streakType,type) {
   /* streakType options: 
@@ -326,7 +333,6 @@ function renderLeagueFacts(streakType,type) {
         }
         teamNames.push(teamsTable[i].children[2].textContent)
         leagueFacts[teamsTable[i].children[2].textContent] = factsList
-        console.log(leagueFacts)
         if (i>=teamsTable.length-1) {
           const streak = teamNames.map(team => leagueFacts[team][streakType])
           const biggestStreak = (type === 'max') ? Math.max(...streak) : Math.min(...streak)
@@ -467,4 +473,37 @@ function rightSidebarDataOut() {
   if (!!document.querySelector("#venue img")) {
     document.querySelector('#venue img').remove()
   }
+}
+function playerData() {
+  const leagueId = document.querySelector(
+    "#league-champion h3:first-of-type"
+  ).id;
+  
+  const playerName = document.querySelector('#player-name')
+  const submitPlayer = document.querySelector('#player form')
+  submitPlayer.addEventListener('submit', (e)=> {
+    e.preventDefault()
+    console.log(playerName.value.length)
+    if (playerName.value.length < 4) {
+      alert('I need at least 4 characters. Try again :)')
+    } else {
+      fetch(`https://v3.football.api-sports.io/players?search=${playerName.value}&league=${leagueId}`, apiCongigObj)
+        .then(resp => resp.json())
+        .then(players => {
+          console.log(players.response[0])
+          document.querySelector('#player').appendChild(document.createElement('div')).setAttribute('id','player-img')
+          document.querySelector('#player-img').innerHTML = 
+          `<img src="https://media.api-sports.io/football/players/${players.response[0].player.id}.png">
+          <ul>
+          <li>First Name: <b>${players.response[0].player.firstname}</b></li>
+          <li>Surname: <b>${players.response[0].player.lastname}</b></li>
+          <li>Age: <b>${players.response[0].player.age}</b></li>
+          </ul>
+          <p>This player was born in ${players.response[0].player.birth.place}, ${players.response[0].player.birth.country}, and plays for ${players.response[0].statistics[0].team.name} as ${players.response[0].statistics[0].games.position}.`
+          playerName.value = ''
+      })
+      
+    }
+  })
+  
 }

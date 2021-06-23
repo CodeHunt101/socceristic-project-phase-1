@@ -79,6 +79,9 @@ th,
 td {
   color: seashell;
 }
+table #rank {
+  text-align: center;
+}
 .content #standings {
   width: auto;
   margin-left: auto;
@@ -121,6 +124,8 @@ td img {
   background-color: rgba(0, 0, 0, 0.2);
   margin-top: 40px;
   margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
 }
 #coach p,
 #venue p {
@@ -135,6 +140,11 @@ td img {
 }
 #venue img {
   width: 350px;
+}
+#player-img {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
 }
 /* Spinner borders subject to change their margin */
 #coach .spinner-border {
