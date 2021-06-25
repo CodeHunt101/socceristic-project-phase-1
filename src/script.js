@@ -1,3 +1,4 @@
+//Countries to be used
 const countryTargets = [
   "Germany",
   "Italy",
@@ -7,6 +8,7 @@ const countryTargets = [
   "Portugal",
   "Netherlands",
 ];
+//API configuration object. API is public but requires key
 const apiConfigObj = {
   method: "GET",
   headers: {
