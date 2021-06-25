@@ -6,19 +6,17 @@ const countryTargets = [
   "Spain",
   "Portugal",
   "Netherlands",
-  "Brazil",
 ];
-const apiCongigObj = {
+const apiConfigObj = {
   method: "GET",
   headers: {
     "x-rapidapi-host": "v3.football.api-sports.io",
-    "x-rapidapi-key": "8bc0ad048d98ed6fa090704ed786ca23",
+    "x-rapidapi-key": "8bc0ad048d98ed6fa090704ed786ca23"
   },
-  redirect: 'follow'
 };
 //Render list of countries and their flags
 const countriesList = document.querySelector('#list-countries')
-fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
+fetch(`https://v3.football.api-sports.io/countries`, apiConfigObj)
   .then((response) => response.json())
   .then((country) => {
     let countriesListBody = ''
@@ -39,6 +37,10 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
     const countries = document.getElementsByClassName("country");
     for (const country of countries) {
       country.addEventListener("click", function (e) {
+        for (const country of countries) {
+          country.className = "country btn btn-info"
+        }
+        country.className += " highlighted"
         rightSidebarDataOut()
         spinnerDisplayer('on','hidden','#coach')
         spinnerDisplayer('on','hidden','#venue')
@@ -53,7 +55,7 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
         document.querySelector("select").style.display = "inline";
         fetch(
           `https://v3.football.api-sports.io/leagues?country=${country.children[1].innerText}`,
-          apiCongigObj
+          apiConfigObj
         )
           .then((resp) => resp.json())
           .then((leagues) => {
@@ -92,7 +94,7 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
             const season = document.querySelector("select");
             fetch(
               `https://v3.football.api-sports.io/standings?league=${leagueId}&season=${season.value}`,
-              apiCongigObj
+              apiConfigObj
             )
               .then((resp) => resp.json())
               .then((standings) => {
@@ -126,7 +128,7 @@ fetch(`https://v3.football.api-sports.io/countries`, apiCongigObj)
       ).id;
       fetch(
         `https://v3.football.api-sports.io/standings?league=${leagueId}&season=${season.value}`,
-        apiCongigObj)
+        apiConfigObj)
         .then((resp) => resp.json())
         .then((standings) => {
           document.querySelector("#champion").innerHTML = `
@@ -182,7 +184,7 @@ function renderStandingsTable() {
     .querySelector("#standings tbody")
   const season = document.querySelector("select");
   //Fetching to get the standings
-  fetch(`https://v3.football.api-sports.io/standings?league=${leagueId}&season=${season.value}`, apiCongigObj)
+  fetch(`https://v3.football.api-sports.io/standings?league=${leagueId}&season=${season.value}`, apiConfigObj)
     .then(resp => resp.json())
     .then(standings => {
       console.log
@@ -264,7 +266,7 @@ function renderTopScorersAndFacts() {
   .innerHTML =
     `<tr>
       <th class = "logos-header"> </th>
-      <th>Top 5 Scorers</th>
+      <th>Top 15 Scorers</th>
       <th>Goals</th>
     </tr>`
   //Creation of the table body
@@ -277,11 +279,11 @@ function renderTopScorersAndFacts() {
   const topScorersData =  document
   .querySelector("#top-scorers tbody")
   //Fetching to get the standings
-  fetch(`https://v3.football.api-sports.io/players/topscorers?league=${leagueId}&season=${season.value}`, apiCongigObj)
+  fetch(`https://v3.football.api-sports.io/players/topscorers?league=${leagueId}&season=${season.value}`, apiConfigObj)
     .then(resp => resp.json())
     .then(topScorers => {
       let topScorersDataBody = ""
-      for (let i=0; i<5; i++) {
+      for (let i=0; i<15; i++) {
         topScorersDataBody += 
         `<tr>
           <td><img src = ${topScorers.response[i].statistics[0].team.logo}></td>
@@ -292,12 +294,12 @@ function renderTopScorersAndFacts() {
       topScorersData.innerHTML = topScorersDataBody
     })
   document.querySelector('#facts-container').appendChild(document.createElement('div')).setAttribute('id','more-facts')
-  // renderLeagueFacts('largest_streak_wins','max')
-  // renderLeagueFacts('largest_streak_draws','max')
-  // renderLeagueFacts('largest_streak_loses','max')
-  // renderLeagueFacts('penalty','max')
-  // renderLeagueFacts('penalty','min')
-  // renderLeagueFacts('clean_sheet','max')
+  renderLeagueFactsServer('largest_streak_wins','max')
+  renderLeagueFactsServer('largest_streak_draws','max')
+  renderLeagueFactsServer('largest_streak_loses','max')
+  renderLeagueFactsServer('penalty','max')
+  renderLeagueFactsServer('penalty','min')
+  renderLeagueFactsServer('clean_sheet','max')
 }
 function renderLeagueFacts(streakType,type) {
   /* streakType options: 
@@ -316,8 +318,8 @@ function renderLeagueFacts(streakType,type) {
   const teamNames = []
   const streakTeams = []
   const teamsTable = document.querySelectorAll('#standings tbody tr')
-  for (let i=0; i<teamsTable.length;++i) {
-    fetch(`https://v3.football.api-sports.io/teams/statistics?season=${season.value}&team=${teamsTable[i].children[2].id.split('-')[1]}&league=${leagueId}`, apiCongigObj)
+  for (let i=0; i<teamsTable.length;i++) {
+    fetch(`https://v3.football.api-sports.io/teams/statistics?season=${season.value}&team=${teamsTable[i].children[2].id.split('-')[1]}&league=${leagueId}`, apiConfigObj)
       .then(resp => resp.json())
       .then(teamStats => {
         const factsList = {
@@ -342,41 +344,23 @@ function renderLeagueFacts(streakType,type) {
             }
           }
           if (streakType === 'largest_streak_wins' && type === 'max') {
-            document.querySelector('#more-facts').appendChild(document.createElement('ul')).textContent = `Team(s) that had the largest winner streak with ${biggestStreak} in total: `
-            streakTeams.forEach(team => {
-              document.querySelectorAll('#more-facts ul')[document.querySelectorAll('#more-facts ul').length-1].appendChild(document.createElement('li')).textContent = team
-            })
+            renderStreakTeams('Largest Win Streak',biggestStreak, streakTeams)
           }
           if (streakType === 'largest_streak_draws' && type === 'max') {
-            document.querySelector('#more-facts').appendChild(document.createElement('ul')).textContent = `Team(s) that had the largest draws streak with ${biggestStreak} in total: `
-            streakTeams.forEach(team => {
-              document.querySelectorAll('#more-facts ul')[document.querySelectorAll('#more-facts ul').length-1].appendChild(document.createElement('li')).textContent = team
-            })
+            renderStreakTeams('Largest Draw Streak',biggestStreak, streakTeams)
           }
           if (streakType === 'largest_streak_loses' && type === 'max') {
-            document.querySelector('#more-facts').appendChild(document.createElement('ul')).textContent = `Team(s) that had the largest loser streak with ${biggestStreak} in total: `
-            streakTeams.forEach(team => {
-              document.querySelectorAll('#more-facts ul')[document.querySelectorAll('#more-facts ul').length-1].appendChild(document.createElement('li')).textContent = team
-            })
+            renderStreakTeams('Largest Lose Streak',biggestStreak, streakTeams)
           }
           if (streakType === 'penalty' && type === 'max') {
-            document.querySelector('#more-facts').appendChild(document.createElement('ul')).textContent = `Most penalties conceded with ${biggestStreak} in total: `
-            streakTeams.forEach(team => {
-              document.querySelectorAll('#more-facts ul')[document.querySelectorAll('#more-facts ul').length-1].appendChild(document.createElement('li')).textContent = team
-            })
+            renderStreakTeams('Most Penalties Conceded',biggestStreak, streakTeams)
           }
           if (streakType === 'penalty' && type === 'min') {
-            document.querySelector('#more-facts').appendChild(document.createElement('ul')).textContent = `Least penalties conceded with ${biggestStreak} in total: `
-            streakTeams.forEach(team => {
-              document.querySelectorAll('#more-facts ul')[document.querySelectorAll('#more-facts ul').length-1].appendChild(document.createElement('li')).textContent = team
-            })
+            renderStreakTeams('Fewest Penalties Conceded',biggestStreak, streakTeams)
           }
           if (streakType === 'clean_sheet' && type === 'max') {
-            document.querySelector('#more-facts').appendChild(document.createElement('ul')).textContent = `Team(s) that had the largest clean sheet streak with ${biggestStreak} in total: `
-            streakTeams.forEach(team => {
-              document.querySelectorAll('#more-facts ul')[document.querySelectorAll('#more-facts ul').length-1].appendChild(document.createElement('li')).textContent = team
-            })
-          }
+            renderStreakTeams('Most Clean Sheets',biggestStreak, streakTeams)
+          } 
         }
     })
   }
@@ -392,7 +376,7 @@ function renderCoachVenueFacts() {
       //Display loading spinner
       spinnerDisplayer('on','visible','#coach')
       //Fetch coach
-      fetch(`https://v3.football.api-sports.io/coachs?team=${team.children[2].id.split('-')[1]}`,apiCongigObj)
+      fetch(`https://v3.football.api-sports.io/coachs?team=${team.children[2].id.split('-')[1]}`,apiConfigObj)
         .then(resp => resp.json())
         .then(coaches => {
           document.querySelector('#coach').appendChild(document.createElement('img')).setAttribute('src',`${coaches.response[0].photo}`)
@@ -407,7 +391,7 @@ function renderCoachVenueFacts() {
       //Display loading spinner
       spinnerDisplayer('on','visible','#venue')
        //Fetch team venue
-      fetch(`https://v3.football.api-sports.io/teams?id=${team.children[2].id.split('-')[1]}`,apiCongigObj)
+      fetch(`https://v3.football.api-sports.io/teams?id=${team.children[2].id.split('-')[1]}`,apiConfigObj)
         .then(resp => resp.json())
         .then(teamInfo => {
           document.querySelector('#venue').appendChild(document.createElement('img')).setAttribute('src',`${teamInfo.response[0].venue.image}`)
@@ -478,7 +462,6 @@ function playerData() {
   const leagueId = document.querySelector(
     "#league-champion h3:first-of-type"
   ).id;
-  
   const playerName = document.querySelector('#player-name')
   const submitPlayer = document.querySelector('#player form')
   submitPlayer.addEventListener('submit', (e)=> {
@@ -487,7 +470,7 @@ function playerData() {
     if (playerName.value.length < 4) {
       alert('I need at least 4 characters. Try again :)')
     } else {
-      fetch(`https://v3.football.api-sports.io/players?search=${playerName.value}&league=${leagueId}`, apiCongigObj)
+      fetch(`https://v3.football.api-sports.io/players?search=${playerName.value}&league=${leagueId}`, apiConfigObj)
         .then(resp => resp.json())
         .then(players => {
           console.log(players.response[0])
@@ -502,8 +485,110 @@ function playerData() {
           <p>This player was born in ${players.response[0].player.birth.place}, ${players.response[0].player.birth.country}, and plays for ${players.response[0].statistics[0].team.name} as ${players.response[0].statistics[0].games.position}.`
           playerName.value = ''
       })
-      
     }
   })
-  
+}
+function renderLeagueFactsServer(streakType,type) {
+  /* streakType options: 
+    -largest_streak_wins
+    -largest_streak_draws
+    -largest_streak_loses 
+    -penalty
+    -clean_sheet
+    type options:
+    -max, else min */
+  const leagueId = document.querySelector(
+    "#league-champion h3:first-of-type"
+  ).id;
+  const leagueFacts = {}
+  const teamNames = []
+  const streakTeams = []
+  if (document.querySelector("select").value === '2020') {
+    fetch(`http://localhost:3000/${leagueId}`, apiConfigObj)
+      .then(resp => resp.json())
+      .then(teamStats => {
+        for (team in teamStats) {
+          const factsList = {
+            largest_streak_wins: teamStats[team].biggest.streak.wins,
+            largest_streak_draws: teamStats[team].biggest.streak.draws,
+            largest_streak_loses: teamStats[team].biggest.streak.loses,
+            best_win_home: teamStats[team].biggest.wins.home,
+            best_win_away: teamStats[team].biggest.wins.away,
+            worst_lose_home: teamStats[team].biggest.loses.home,
+            worst_lose_away: teamStats[team].biggest.loses.away,
+            clean_sheet: teamStats[team].clean_sheet.total,
+            penalty: teamStats[team].penalty.total
+          }
+          teamNames.push(team)
+          leagueFacts[team] = factsList
+        }
+        const streak = teamNames.map(team => leagueFacts[team][streakType])
+        const biggestStreak = (type === 'max') ? Math.max(...streak) : Math.min(...streak)
+        for (team of teamNames) {
+          if (leagueFacts[team][streakType] === biggestStreak) {
+            streakTeams.push(team)
+          }
+        }
+        if (streakType === 'largest_streak_wins' && type === 'max') {
+          renderStreakTeams('Largest Win Streak',biggestStreak, streakTeams)
+        }
+        if (streakType === 'largest_streak_draws' && type === 'max') {
+          renderStreakTeams('Largest Draw Streak',biggestStreak, streakTeams)
+        }
+        if (streakType === 'largest_streak_loses' && type === 'max') {
+          renderStreakTeams('Largest Lose Streak',biggestStreak, streakTeams)
+        }
+        if (streakType === 'penalty' && type === 'max') {
+          renderStreakTeams('Most Penalties Conceded',biggestStreak, streakTeams)
+        }
+        if (streakType === 'penalty' && type === 'min') {
+          renderStreakTeams('Fewest Penalties Conceded',biggestStreak, streakTeams)
+        }
+        if (streakType === 'clean_sheet' && type === 'max') {
+          renderStreakTeams('Most Clean Sheets',biggestStreak, streakTeams)
+        } 
+    })
+  } 
+}
+function renderStreakTeams(tableHeader,biggestStreak, streakTeams) {
+  document.querySelector('#more-facts').appendChild(document.createElement('div')).innerHTML = 
+    `<table class = "facts-info table table-bordered table-hover .table-condensed">
+      <tr>
+        <th colspan='2' class = "facts-header">${tableHeader}</th>
+      </tr>
+      <tr>
+        <td class="biggest-streak"><strong>${biggestStreak}</strong></td>
+        <td class="streak-team"></td>
+      </tr>
+    </table>`
+    streakTeams.forEach(team => {
+      document.querySelectorAll('.biggest-streak')[document.querySelectorAll('.biggest-streak').length-1].setAttribute('rowspan',`${streakTeams.length}`)
+      document.querySelectorAll('.streak-team')[document.querySelectorAll('.streak-team').length-1].appendChild(document.createElement('tr')).innerHTML = `<li>${team}</li>`
+  })
+}
+function statisticsCombiner() {
+  //Creates json data about league facts
+  const leagueId = document.querySelector(
+    "#league-champion h3:first-of-type"
+  ).id;
+  const teamNames = []
+  const teamsTable = document.querySelectorAll('#standings tbody tr')
+  const consolidated = []
+  const objectFinal = {}
+  for (let i=0; i<teamsTable.length;i++) {
+    fetch(`https://v3.football.api-sports.io/teams/statistics?season=2020&team=${teamsTable[i].children[2].id.split('-')[1]}&league=${leagueId}`, apiConfigObj)
+      .then(resp => resp.json())
+      .then(teamStats => {
+        console.log(teamStats)
+        teamNames.push(teamsTable[i].children[2].textContent)
+        consolidated.push(teamStats.response)
+        if (i>=teamsTable.length-1) {
+          for (let i = 0; i < teamNames.length; i++) {
+            objectFinal[teamNames[i]] = consolidated[i]
+          }
+          
+        }
+        console.log(objectFinal)
+    })
+  }
 }

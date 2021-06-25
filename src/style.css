@@ -47,6 +47,9 @@ button {
   margin: 5px;
   width: 150px;
 }
+button.highlighted:focus {
+  background-color: cadetblue;
+}
 button.country:hover {
   color :indianred;
 }
@@ -90,6 +93,9 @@ table #rank {
 #standings tbody tr:hover {
   background-color: rgba(255, 255, 153,0.2);
 }
+#standings tbody tr:focus {
+  background-color: rgba(255, 255, 153,0.2);
+}
 #standings-qualifications {
   list-style-type: none;
 }
@@ -108,7 +114,8 @@ table #rank {
 }
 #facts-container {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
+  align-items: flex-start;
 }
 #top-scorers {
   width: auto;
@@ -116,6 +123,16 @@ table #rank {
 td img {
   width: 20px;
   justify-content: center;
+}
+table.facts-info {
+  background-color:rgba(47, 0, 100, 0.5)
+}
+table .facts-header {
+  text-align: center;
+}
+td.biggest-streak {
+  font-size: x-large;
+  width: 45px;
 }
 /* ::::::::::::::::Right sidebar:::::::::::::::: */
 #coach {
