@@ -470,10 +470,12 @@ function playerData() {
     if (playerName.value.length < 4) {
       alert('I need at least 4 characters. Try again :)')
     } else {
+      if (!!document.querySelector('#player-img')) {
+        document.querySelector('#player-img').remove()
+      }
       fetch(`https://v3.football.api-sports.io/players?search=${playerName.value}&league=${leagueId}`, apiConfigObj)
         .then(resp => resp.json())
         .then(players => {
-          console.log(players.response[0])
           document.querySelector('#player').appendChild(document.createElement('div')).setAttribute('id','player-img')
           document.querySelector('#player-img').innerHTML = 
           `<img src="https://media.api-sports.io/football/players/${players.response[0].player.id}.png">
@@ -586,7 +588,6 @@ function statisticsCombiner() {
           for (let i = 0; i < teamNames.length; i++) {
             objectFinal[teamNames[i]] = consolidated[i]
           }
-          
         }
         console.log(objectFinal)
     })

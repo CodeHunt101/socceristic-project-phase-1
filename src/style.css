@@ -98,6 +98,9 @@ table #rank {
 }
 #standings-qualifications {
   list-style-type: none;
+  width: 40%;
+  margin-left: auto;
+  margin-right: auto;
 }
 #champions-league {
   background: green;
@@ -158,10 +161,16 @@ td.biggest-streak {
 #venue img {
   width: 350px;
 }
+#player-name {
+  width: 65%
+}
 #player-img {
   margin-left: auto;
   margin-right: auto;
   margin-top: 10px;
+}
+#player-img p{
+  width: 75%
 }
 /* Spinner borders subject to change their margin */
 #coach .spinner-border {
