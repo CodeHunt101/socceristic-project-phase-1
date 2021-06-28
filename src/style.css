@@ -1,7 +1,7 @@
 body {
   margin-left: 9%;
   margin-right: 9%;
-  background-image: url(../img/wallpapertip_soccer-wallpaper_1025669.jpeg);
+  background-image: url(img/wallpapertip_soccer-wallpaper_1025669.jpeg);
   /* Background image is centered vertically and horizontally at all times */
   background-position: center center;
   /* Background image doesn’t tile */
@@ -20,13 +20,12 @@ body {
 a {
   color: white;
   text-decoration: none;
-  float:right;
+  float: right;
   margin-right: 5px;
 }
 a:hover {
-  color:brown;
+  color: brown;
 }
-
 #main-container {
   background-color: rgba(0, 0, 0, 0.7);
   padding-left: 20px;
@@ -51,7 +50,7 @@ button.highlighted:focus {
   background-color: cadetblue;
 }
 button.country:hover {
-  color :indianred;
+  color: indianred;
 }
 button img {
   width: 40px;
@@ -90,15 +89,18 @@ table #rank {
   margin-left: auto;
   margin-right: auto;
 }
+#standings tbody {
+  cursor: pointer;
+}
 #standings tbody tr:hover {
-  background-color: rgba(255, 255, 153,0.2);
+  background-color: rgba(255, 255, 153, 0.2);
 }
 #standings tbody tr:focus {
-  background-color: rgba(255, 255, 153,0.2);
+  background-color: rgba(255, 255, 153, 0.2);
 }
 #standings-qualifications {
   list-style-type: none;
-  width: 40%;
+  width: 50%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -123,12 +125,15 @@ table #rank {
 #top-scorers {
   width: auto;
 }
+#top-scorers tbody tr:hover {
+  background-color: rgba(255, 255, 153, 0.2);
+}
 td img {
   width: 20px;
   justify-content: center;
 }
 table.facts-info {
-  background-color:rgba(47, 0, 100, 0.5)
+  background-color: rgba(47, 0, 100, 0.5);
 }
 table .facts-header {
   text-align: center;
@@ -161,16 +166,19 @@ td.biggest-streak {
 #venue img {
   width: 350px;
 }
+#player {
+  margin-top: 70px;
+}
 #player-name {
-  width: 65%
+  width: 65%;
 }
 #player-img {
   margin-left: auto;
   margin-right: auto;
   margin-top: 10px;
 }
-#player-img p{
-  width: 75%
+#player-img p {
+  width: 75%;
 }
 /* Spinner borders subject to change their margin */
 #coach .spinner-border {
