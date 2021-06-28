@@ -1,4 +1,4 @@
-{
+teamStats = {
   "39": {
     "Manchester City": {
       "league": {

@@ -356,12 +356,12 @@ function renderTopScorersAndFacts() {
     .appendChild(document.createElement("div"))
     .setAttribute("id", "more-facts");
   //Render League facts. Needs mock server.
-  renderLeagueFactsServer("largest_streak_wins", "max");
-  renderLeagueFactsServer("largest_streak_draws", "max");
-  renderLeagueFactsServer("largest_streak_loses", "max");
-  renderLeagueFactsServer("penalty", "max");
-  renderLeagueFactsServer("penalty", "min");
-  renderLeagueFactsServer("clean_sheet", "max");
+  renderLeagueFactsJsJSON("largest_streak_wins", "max");
+  renderLeagueFactsJsJSON("largest_streak_draws", "max");
+  renderLeagueFactsJsJSON("largest_streak_loses", "max");
+  renderLeagueFactsJsJSON("penalty", "max");
+  renderLeagueFactsJsJSON("penalty", "min");
+  renderLeagueFactsJsJSON("clean_sheet", "max");
 }
 function last5(results) {
   //Returns image link related to the result of the match
@@ -379,7 +379,7 @@ function last5(results) {
     return char;
   });
 }
-function renderLeagueFactsServer(streakType, type) {
+function renderLeagueFactsJsJSON(streakType, type) {
   /* streakType options: 
     -largest_streak_wins
     -largest_streak_draws
@@ -395,20 +395,20 @@ function renderLeagueFactsServer(streakType, type) {
   const teamNames = [];
   const streakTeams = [];
   if (document.querySelector("select").value === "2020") {
-    fetch(`http://localhost:3000/${leagueId}`, apiConfigObj)
-      .then((resp) => resp.json())
-      .then((teamStats) => {
-        for (team in teamStats) {
+    // fetch(`http://localhost:3000/${leagueId}`, apiConfigObj)
+    //   .then((resp) => resp.json())
+    //   .then((teamStats) => {
+        for (team in teamStats[leagueId]) {
           const factsList = {
-            largest_streak_wins: teamStats[team].biggest.streak.wins,
-            largest_streak_draws: teamStats[team].biggest.streak.draws,
-            largest_streak_loses: teamStats[team].biggest.streak.loses,
-            best_win_home: teamStats[team].biggest.wins.home,
-            best_win_away: teamStats[team].biggest.wins.away,
-            worst_lose_home: teamStats[team].biggest.loses.home,
-            worst_lose_away: teamStats[team].biggest.loses.away,
-            clean_sheet: teamStats[team].clean_sheet.total,
-            penalty: teamStats[team].penalty.total,
+            largest_streak_wins: teamStats[leagueId][team].biggest.streak.wins,
+            largest_streak_draws: teamStats[leagueId][team].biggest.streak.draws,
+            largest_streak_loses: teamStats[leagueId][team].biggest.streak.loses,
+            best_win_home: teamStats[leagueId][team].biggest.wins.home,
+            best_win_away: teamStats[leagueId][team].biggest.wins.away,
+            worst_lose_home: teamStats[leagueId][team].biggest.loses.home,
+            worst_lose_away: teamStats[leagueId][team].biggest.loses.away,
+            clean_sheet: teamStats[leagueId][team].clean_sheet.total,
+            penalty: teamStats[leagueId][team].penalty.total,
           };
           teamNames.push(team);
           leagueFacts[team] = factsList;
@@ -447,7 +447,7 @@ function renderLeagueFactsServer(streakType, type) {
         if (streakType === "clean_sheet" && type === "max") {
           renderStreakTeams("Most Clean Sheets", biggestStreak, streakTeams);
         }
-      });
+      // });
   }
 }
 function renderStreakTeams(tableHeader, biggestStreak, streakTeams) {
@@ -628,134 +628,4 @@ function playerData() {
         });
     }
   });
-}
-function renderLeagueFacts(streakType, type) {
-  /* streakType options: 
-    -largest_streak_wins
-    -largest_streak_draws
-    -largest_streak_loses 
-    -penalty
-    -clean_sheet
-    type options:
-    -max, else min */
-  const season = document.querySelector("select");
-  const leagueId = document.querySelector(
-    "#league-champion h3:first-of-type"
-  ).id;
-  const leagueFacts = {};
-  const teamNames = [];
-  const streakTeams = [];
-  const teamsTable = document.querySelectorAll("#standings tbody tr");
-  for (let i = 0; i < teamsTable.length; i++) {
-    fetch(
-      `https://v3.football.api-sports.io/teams/statistics?season=${
-        season.value
-      }&team=${teamsTable[i].children[2].id.split("-")[1]}&league=${leagueId}`,
-      apiConfigObj
-    )
-      .then((resp) => resp.json())
-      .then((teamStats) => {
-        const factsList = {
-          largest_streak_wins: teamStats.response.biggest.streak.wins,
-          largest_streak_draws: teamStats.response.biggest.streak.draws,
-          largest_streak_loses: teamStats.response.biggest.streak.loses,
-          best_win_home: teamStats.response.biggest.wins.home,
-          best_win_away: teamStats.response.biggest.wins.away,
-          worst_lose_home: teamStats.response.biggest.loses.home,
-          worst_lose_away: teamStats.response.biggest.loses.away,
-          clean_sheet: teamStats.response.clean_sheet.total,
-          penalty: teamStats.response.penalty.total,
-        };
-        teamNames.push(teamsTable[i].children[2].textContent);
-        leagueFacts[teamsTable[i].children[2].textContent] = factsList;
-        if (i >= teamsTable.length - 1) {
-          const streak = teamNames.map((team) => leagueFacts[team][streakType]);
-          const biggestStreak =
-            type === "max" ? Math.max(...streak) : Math.min(...streak);
-          for (team of teamNames) {
-            if (leagueFacts[team][streakType] === biggestStreak) {
-              streakTeams.push(team);
-            }
-          }
-          if (streakType === "largest_streak_wins" && type === "max") {
-            renderStreakTeams("Largest Win Streak", biggestStreak, streakTeams);
-          }
-          if (streakType === "largest_streak_draws" && type === "max") {
-            renderStreakTeams(
-              "Largest Draw Streak",
-              biggestStreak,
-              streakTeams
-            );
-          }
-          if (streakType === "largest_streak_loses" && type === "max") {
-            renderStreakTeams(
-              "Largest Lose Streak",
-              biggestStreak,
-              streakTeams
-            );
-          }
-          if (streakType === "penalty" && type === "max") {
-            renderStreakTeams(
-              "Most Penalties Conceded",
-              biggestStreak,
-              streakTeams
-            );
-          }
-          if (streakType === "penalty" && type === "min") {
-            renderStreakTeams(
-              "Fewest Penalties Conceded",
-              biggestStreak,
-              streakTeams
-            );
-          }
-          if (streakType === "clean_sheet" && type === "max") {
-            renderStreakTeams("Most Clean Sheets", biggestStreak, streakTeams);
-          }
-        }
-      });
-  }
-}
-function statisticsCombiner() {
-  //Creates json data about league facts
-  const leagueId = document.querySelector(
-    "#league-champion h3:first-of-type"
-  ).id;
-  const teamNames = [];
-  const teamsTable = document.querySelectorAll("#standings tbody tr");
-  const consolidated = [];
-  const objectFinal = {};
-  for (let i = 0; i < teamsTable.length; i++) {
-    fetch(
-      `https://v3.football.api-sports.io/teams/statistics?season=2020&team=${
-        teamsTable[i].children[2].id.split("-")[1]
-      }&league=${leagueId}`,
-      apiConfigObj
-    )
-      .then((resp) => resp.json())
-      .then((teamStats) => {
-        console.log(teamStats);
-        teamNames.push(teamsTable[i].children[2].textContent);
-        consolidated.push(teamStats.response);
-        if (i >= teamsTable.length - 1) {
-          for (let i = 0; i < teamNames.length; i++) {
-            objectFinal[teamNames[i]] = consolidated[i];
-          }
-        }
-        console.log(objectFinal);
-      });
-  }
-}
-function jsonCreator(url, jsonName) {
-  const fetch = require("node-fetch");
-  const fs = require("fs");
-  fetch(url, apiConfigObj)
-    .then((resp) => resp.json())
-    .then((json) => {
-      for (key in json.response) {
-        if (typeof json.response[key] !== "object") {
-          json.response[key] = json.response[key].split();
-        }
-      }
-      fs.writeFileSync(jsonName, JSON.stringify(json.response, null, 2));
-    });
 }

@@ -1,5 +1,1 @@
-draft/
-.DS_Store
-node_modules/
-package-lock.json
-json_creator.js
+other_functions.js
