@@ -43,7 +43,7 @@ fetch(`https://v3.football.api-sports.io/countries`, apiConfigObj)
           country.className = "country btn btn-info";
         }
         country.className += " highlighted";
-        rightSidebarDataOut();
+        removeCoachAndVenue();
         spinnerDisplayer("on", "hidden", "#coach");
         spinnerDisplayer("on", "hidden", "#venue");
         //Make sure it deletes all elements from content div except the dropdown
@@ -117,7 +117,7 @@ fetch(`https://v3.football.api-sports.io/countries`, apiConfigObj)
     //Render champion team logo
     const season = document.querySelector("select");
     season.addEventListener("change", function () {
-      rightSidebarDataOut();
+      removeCoachAndVenue();
       spinnerDisplayer("on", "hidden", "#coach");
       spinnerDisplayer("on", "hidden", "#venue");
       if (!!document.querySelectorAll("#league-champion img")[1]) {
@@ -445,8 +445,7 @@ function fetchRenderLeagueFactsJsJSON(streakType, type) {
 }
 function fetchRenderStreakTeams(tableHeader, biggestStreak, streakTeams) {
   document
-    .querySelector("#more-facts")
-    .appendChild(
+    .querySelector("#more-facts").appendChild(
       document.createElement("div")
     ).innerHTML = `<table class = "facts-info table table-bordered table-hover .table-condensed">
       <tr>
@@ -474,7 +473,7 @@ function fetchRenderStreakTeams(tableHeader, biggestStreak, streakTeams) {
 function fetchRenderCoachVenueFacts() {
   document.querySelectorAll("#standings tbody tr").forEach((team) => {
     team.addEventListener("click", () => {
-      rightSidebarDataOut();
+      removeCoachAndVenue();
       //Prevent element to be event listened while fetching
       team.style.pointerEvents = "none";
       //Display loading spinner
@@ -502,7 +501,7 @@ function fetchRenderCoachVenueFacts() {
           spinnerDisplayer("off", "hidden", "#coach");
         });
 
-      rightSidebarDataOut();
+      removeCoachAndVenue();
       //Display loading spinner
       spinnerDisplayer("on", "visible", "#venue");
       //Fetch team venue
@@ -560,7 +559,7 @@ function contentCatchError() {
   }
   alert("COMING SOON!!!");
 }
-function rightSidebarDataOut() {
+function removeCoachAndVenue() {
   //Removes all the data from the right sidebar
   document.querySelector("#venue h2").textContent = "Venue:";
 
