@@ -16,6 +16,40 @@ const apiConfigObj = {
     "x-rapidapi-key": "4a5247197d2563f66ada59ac73f04b7f",
   },
 };
+//Render random Did you know facts
+function showDidYouKnowFact() {
+  const didYouKnowFacts = [
+    'The earliest game that resembled association football in history is the Chinese game cuju. The history of the sport dates back to the Han Dynasty (206 BC – 220 AD).',
+    'Early alternatives to association football balls include animal skins, skulls, pig bladders, and more.',
+    'The oldest professional football club in the world still in existence today is Sheffield FC. It was founded in 1857, and they have fluctuated in different tiers of play in England.',
+    'The country of Greenland has never been able to have a FIFA recognized team. That is because they can’t grow grass to create fields.',
+    'Referees were not used in official soccer matches until 1881. Up until then, people playing were responsible for making any calls.',
+    'The popularity of association football took off with colonialism, as the British took the game with them to all corners of the world.',
+    'The very first World Cup was a difficult tournament for European countries to get to in 1930. Hosted in Uruguay, only France, Romania, Belgium, and Yugoslavia were able to make the trip from Europe.',
+    'A match in the Congo in 1998 ended in tragedy as lightning killed an entire team. The opposition was left untouched.',
+    'Football made its television debut in 1937, featuring Arsenal in England. It was a practice match that involved players from the club.',
+    'The most fans to attend one football match took place in 1950 in Rio de Janeiro. A total of 199,854 people watch Brazil play Uruguay in the World Cup.',
+    'There are over 5000 teams in the English football system, with different tiers depending on the caliber of play. Any team can move up to the highest league, the Barclays Premier League, by winning and moving up.',
+    'Cristiano Ronaldo holds the distinction as the only known football player in professional history to score a goal in every single minute of a match.'
+  ]
+  const rgbas = [
+    'rgba(165, 94, 36, 0.5)',
+    'rgba(241, 47, 33, 0.5)',
+    'rgba(241, 186, 33, 0.5)',
+    'rgba(151, 241, 33, 0.5)',
+    'rgba(33, 241, 161, 0.3)',
+    'rgba(24, 174, 243, 0.2)',
+    'rgba(243, 24, 108, 0.2)',
+  ]
+  let randomInteger = () => Math.floor(Math.random() * didYouKnowFacts.length)
+  let randomRGBA = () => Math.floor(Math.random() * rgbas.length)
+  document.getElementById('random-facts').innerHTML =
+    `<p><b>Did you know that...</b></p>
+  <small>${didYouKnowFacts[randomInteger()]}</small>`
+  document.getElementById('random-facts').style.backgroundColor = rgbas[randomRGBA()]
+}
+showDidYouKnowFact()
+setInterval(showDidYouKnowFact, 10000)
 //Render list of countries and their flags
 const countriesList = document.querySelector("#list-countries");
 fetch(`https://v3.football.api-sports.io/countries`, apiConfigObj)
@@ -66,12 +100,16 @@ fetch(`https://v3.football.api-sports.io/countries`, apiConfigObj)
             leagues.response[0].seasons
               .reverse()
               .forEach(
-                (season) =>
-                  (document
-                    .getElementById("season")
-                    .appendChild(document.createElement("option")).textContent =
-                    season.year)
-              );
+                (season) => {
+                  console.log(typeof season.year)
+                  if (season.year !== 2021) {
+                    document
+                      .getElementById("season")
+                      .appendChild(document.createElement("option")).textContent =
+                      season.year
+                  }
+                }
+              )
 
             //Render name and logo of first division league
             if (!!document.querySelector("#league-champion")) {
@@ -195,58 +233,48 @@ function renderStandingsTable() {
         i++
       ) {
         standingsDataBody += `<tr>
-          <td id = "rank">${
-            standings.response[0].league.standings[0][i].rank
+          <td id = "rank">${standings.response[0].league.standings[0][i].rank
           }</td>
-          <td><img src = ${
-            standings.response[0].league.standings[0][i].team.logo
+          <td><img src = ${standings.response[0].league.standings[0][i].team.logo
           }></td>
-          <td id = "team-${
-            standings.response[0].league.standings[0][i].team.id
-          }" class = "team-name"><b>${
-          standings.response[0].league.standings[0][i].team.name
-        }</b></td>
+          <td id = "team-${standings.response[0].league.standings[0][i].team.id
+          }" class = "team-name"><b>${standings.response[0].league.standings[0][i].team.name
+          }</b></td>
           <td>${standings.response[0].league.standings[0][i].all.played}</td>
           <td>${standings.response[0].league.standings[0][i].all.win}</td>
           <td>${standings.response[0].league.standings[0][i].all.draw}</td>
           <td>${standings.response[0].league.standings[0][i].all.lose}</td>
           <td>${standings.response[0].league.standings[0][i].all.goals.for}</td>
-          <td>${
-            standings.response[0].league.standings[0][i].all.goals.against
+          <td>${standings.response[0].league.standings[0][i].all.goals.against
           }</td>
           <td>${standings.response[0].league.standings[0][i].goalsDiff}</td>
           <td><b>${standings.response[0].league.standings[0][i].points}</b></td>
           <td>
-            ${
-              last5(standings.response[0].league.standings[0][i].form)[0] ===
-              undefined
-                ? ""
-                : last5(standings.response[0].league.standings[0][i].form)[0]
-            }
-            ${
-              last5(standings.response[0].league.standings[0][i].form)[1] ===
-              undefined
-                ? ""
-                : last5(standings.response[0].league.standings[0][i].form)[1]
-            }
-            ${
-              last5(standings.response[0].league.standings[0][i].form)[2] ===
-              undefined
-                ? ""
-                : last5(standings.response[0].league.standings[0][i].form)[2]
-            }
-            ${
-              last5(standings.response[0].league.standings[0][i].form)[3] ===
-              undefined
-                ? ""
-                : last5(standings.response[0].league.standings[0][i].form)[3]
-            }
-            ${
-              last5(standings.response[0].league.standings[0][i].form)[4] ===
-              undefined
-                ? ""
-                : last5(standings.response[0].league.standings[0][i].form)[4]
-            }
+            ${last5(standings.response[0].league.standings[0][i].form)[0] ===
+            undefined
+            ? ""
+            : last5(standings.response[0].league.standings[0][i].form)[0]
+          }
+            ${last5(standings.response[0].league.standings[0][i].form)[1] ===
+            undefined
+            ? ""
+            : last5(standings.response[0].league.standings[0][i].form)[1]
+          }
+            ${last5(standings.response[0].league.standings[0][i].form)[2] ===
+            undefined
+            ? ""
+            : last5(standings.response[0].league.standings[0][i].form)[2]
+          }
+            ${last5(standings.response[0].league.standings[0][i].form)[3] ===
+            undefined
+            ? ""
+            : last5(standings.response[0].league.standings[0][i].form)[3]
+          }
+            ${last5(standings.response[0].league.standings[0][i].form)[4] ===
+            undefined
+            ? ""
+            : last5(standings.response[0].league.standings[0][i].form)[4]
+          }
           </td>
         </tr>`;
       }
@@ -398,56 +426,56 @@ function renderLeagueFactsJsJSON(streakType, type) {
     // fetch(`http://localhost:3000/${leagueId}`, apiConfigObj)
     //   .then((resp) => resp.json())
     //   .then((teamStats) => {
-        for (team in teamStats[leagueId]) {
-          const factsList = {
-            largest_streak_wins: teamStats[leagueId][team].biggest.streak.wins,
-            largest_streak_draws: teamStats[leagueId][team].biggest.streak.draws,
-            largest_streak_loses: teamStats[leagueId][team].biggest.streak.loses,
-            best_win_home: teamStats[leagueId][team].biggest.wins.home,
-            best_win_away: teamStats[leagueId][team].biggest.wins.away,
-            worst_lose_home: teamStats[leagueId][team].biggest.loses.home,
-            worst_lose_away: teamStats[leagueId][team].biggest.loses.away,
-            clean_sheet: teamStats[leagueId][team].clean_sheet.total,
-            penalty: teamStats[leagueId][team].penalty.total,
-          };
-          teamNames.push(team);
-          leagueFacts[team] = factsList;
-        }
-        const streak = teamNames.map((team) => leagueFacts[team][streakType]);
-        const biggestStreak =
-          type === "max" ? Math.max(...streak) : Math.min(...streak);
-        for (team of teamNames) {
-          if (leagueFacts[team][streakType] === biggestStreak) {
-            streakTeams.push(team);
-          }
-        }
-        if (streakType === "largest_streak_wins" && type === "max") {
-          renderStreakTeams("Largest Win Streak", biggestStreak, streakTeams);
-        }
-        if (streakType === "largest_streak_draws" && type === "max") {
-          renderStreakTeams("Largest Draw Streak", biggestStreak, streakTeams);
-        }
-        if (streakType === "largest_streak_loses" && type === "max") {
-          renderStreakTeams("Largest Lose Streak", biggestStreak, streakTeams);
-        }
-        if (streakType === "penalty" && type === "max") {
-          renderStreakTeams(
-            "Most Penalties Conceded",
-            biggestStreak,
-            streakTeams
-          );
-        }
-        if (streakType === "penalty" && type === "min") {
-          renderStreakTeams(
-            "Fewest Penalties Conceded",
-            biggestStreak,
-            streakTeams
-          );
-        }
-        if (streakType === "clean_sheet" && type === "max") {
-          renderStreakTeams("Most Clean Sheets", biggestStreak, streakTeams);
-        }
-      // });
+    for (team in teamStats[leagueId]) {
+      const factsList = {
+        largest_streak_wins: teamStats[leagueId][team].biggest.streak.wins,
+        largest_streak_draws: teamStats[leagueId][team].biggest.streak.draws,
+        largest_streak_loses: teamStats[leagueId][team].biggest.streak.loses,
+        best_win_home: teamStats[leagueId][team].biggest.wins.home,
+        best_win_away: teamStats[leagueId][team].biggest.wins.away,
+        worst_lose_home: teamStats[leagueId][team].biggest.loses.home,
+        worst_lose_away: teamStats[leagueId][team].biggest.loses.away,
+        clean_sheet: teamStats[leagueId][team].clean_sheet.total,
+        penalty: teamStats[leagueId][team].penalty.total,
+      };
+      teamNames.push(team);
+      leagueFacts[team] = factsList;
+    }
+    const streak = teamNames.map((team) => leagueFacts[team][streakType]);
+    const biggestStreak =
+      type === "max" ? Math.max(...streak) : Math.min(...streak);
+    for (team of teamNames) {
+      if (leagueFacts[team][streakType] === biggestStreak) {
+        streakTeams.push(team);
+      }
+    }
+    if (streakType === "largest_streak_wins" && type === "max") {
+      renderStreakTeams("Largest Win Streak", biggestStreak, streakTeams);
+    }
+    if (streakType === "largest_streak_draws" && type === "max") {
+      renderStreakTeams("Largest Draw Streak", biggestStreak, streakTeams);
+    }
+    if (streakType === "largest_streak_loses" && type === "max") {
+      renderStreakTeams("Largest Lose Streak", biggestStreak, streakTeams);
+    }
+    if (streakType === "penalty" && type === "max") {
+      renderStreakTeams(
+        "Most Penalties Conceded",
+        biggestStreak,
+        streakTeams
+      );
+    }
+    if (streakType === "penalty" && type === "min") {
+      renderStreakTeams(
+        "Fewest Penalties Conceded",
+        biggestStreak,
+        streakTeams
+      );
+    }
+    if (streakType === "clean_sheet" && type === "max") {
+      renderStreakTeams("Most Clean Sheets", biggestStreak, streakTeams);
+    }
+    // });
   }
 }
 function renderStreakTeams(tableHeader, biggestStreak, streakTeams) {
@@ -467,15 +495,15 @@ function renderStreakTeams(tableHeader, biggestStreak, streakTeams) {
   streakTeams.forEach((team) => {
     document
       .querySelectorAll(".biggest-streak")
-      [document.querySelectorAll(".biggest-streak").length - 1].setAttribute(
-        "rowspan",
-        `${streakTeams.length}`
-      );
+    [document.querySelectorAll(".biggest-streak").length - 1].setAttribute(
+      "rowspan",
+      `${streakTeams.length}`
+    );
     document
       .querySelectorAll(".streak-team")
-      [document.querySelectorAll(".streak-team").length - 1].appendChild(
-        document.createElement("tr")
-      ).innerHTML = `<li>${team}</li>`;
+    [document.querySelectorAll(".streak-team").length - 1].appendChild(
+      document.createElement("tr")
+    ).innerHTML = `<li>${team}</li>`;
   });
 }
 function renderCoachVenueFacts() {
@@ -488,8 +516,7 @@ function renderCoachVenueFacts() {
       spinnerDisplayer("on", "visible", "#coach");
       //Fetch coach
       fetch(
-        `https://v3.football.api-sports.io/coachs?team=${
-          team.children[2].id.split("-")[1]
+        `https://v3.football.api-sports.io/coachs?team=${team.children[2].id.split("-")[1]
         }`,
         apiConfigObj
       )
@@ -515,8 +542,7 @@ function renderCoachVenueFacts() {
       spinnerDisplayer("on", "visible", "#venue");
       //Fetch team venue
       fetch(
-        `https://v3.football.api-sports.io/teams?id=${
-          team.children[2].id.split("-")[1]
+        `https://v3.football.api-sports.io/teams?id=${team.children[2].id.split("-")[1]
         }`,
         apiConfigObj
       )

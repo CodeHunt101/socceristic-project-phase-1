@@ -29,6 +29,7 @@ a:hover {
 #main-container {
   background-color: rgba(0, 0, 0, 0.7);
   padding-left: 20px;
+  min-height: 1500px;
 }
 h1 {
   text-align: center;
@@ -180,6 +181,15 @@ td.biggest-streak {
 #player-img p {
   width: 75%;
 }
+#random-facts {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  height: 180px;
+  margin-top: 50px;
+  /* background-color: rgba(243, 24, 108, 0.2); */
+  padding: 10px;
+}
 /* Spinner borders subject to change their margin */
 #coach .spinner-border {
   margin: auto;
@@ -192,7 +202,12 @@ td.biggest-streak {
   visibility: hidden;
 }
 /* Fade in effect to images */
-img {
+img,
+small,
+#countries,
+#standings,
+#standings-qualifications,
+#facts-container {
   animation: fadeIn 5s;
   -webkit-animation: fadeIn 5s;
   -moz-animation: fadeIn 5s;
