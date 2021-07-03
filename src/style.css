@@ -185,12 +185,19 @@ form {
   width: 65%;
 }
 #player-img {
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-top: 10%;
+}
+#player-img img {
+  display: block;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 10px;
 }
 #player-img p {
   width: 75%;
+  margin-left: auto;
+  margin-right: auto;
 }
 #random-facts {
   width: 90%;
