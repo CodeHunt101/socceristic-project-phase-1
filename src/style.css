@@ -28,8 +28,11 @@ a:hover {
 }
 #main-container {
   background-color: rgba(0, 0, 0, 0.7);
-  padding-left: 20px;
-  min-height: 1500px;
+  padding-left: 1.5%;
+  min-height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
 }
 h1 {
   text-align: center;
@@ -42,6 +45,7 @@ h1 {
 #list-countries {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
 }
 button {
   margin: 5px;
@@ -70,7 +74,7 @@ select#season {
 #league img {
   background: rgba(255, 255, 255, 0.4);
 }
-#league-champion {
+#league-and-champion {
   display: flex;
   justify-content: space-evenly;
 }
@@ -86,9 +90,9 @@ table #rank {
   text-align: center;
 }
 .content #standings {
-  width: auto;
   margin-left: auto;
   margin-right: auto;
+  max-width: 100%;
 }
 #standings tbody {
   cursor: pointer;
@@ -163,9 +167,16 @@ td.biggest-streak {
   background-color: rgba(0, 0, 0, 0.2);
   margin-top: 20px;
   margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
 }
 #venue img {
   width: 350px;
+}
+form {
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
 }
 #player {
   margin-top: 70px;
