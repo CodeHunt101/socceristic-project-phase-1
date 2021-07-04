@@ -62,10 +62,7 @@ function runApp() {
             const seasonsDropdown = document.querySelector('#season');
             seasonsDropdownLabel.style.display = 'inline';
             seasonsDropdown.style.display = 'inline';
-            fetch(
-                `https://v3.football.api-sports.io/leagues?country=${country.children[1].innerText}`,
-                apiConfigObj,
-            )
+            fetch(`https://v3.football.api-sports.io/leagues?country=${country.children[1].innerText}`,apiConfigObj)
                 .then((resp) => resp.json())
                 .then((leagues) => {
                   // Season dropdown options
@@ -89,12 +86,12 @@ function runApp() {
             document.querySelector('#player button').disabled = false;
           });
         }
-        // Fetch and Render champion team logo
+        // Fetch and Render logo of the champion team
         fetchRenderChampionLogo();
       });
-  // Show DidYouKnowFacts
+  // Show and run DidYouKnowFacts
   showDidYouKnowFacts();
-  setInterval(showDidYouKnowFacts, 10000);
+  playShowDidYouKnowFacts();
 }
 function renderNameAndLogoLeague(leagues) {
   removeElementifExists('#league-and-champion');
@@ -520,8 +517,25 @@ function showDidYouKnowFacts() {
   const randomFacts = document.getElementById('random-facts')
   randomFacts.innerHTML = 
   `<p><b>Did you know that...</b></p>
-  <small>${didYouKnowFacts[randomInteger()]}</small>`;
+  <small>${didYouKnowFacts[randomInteger()]}</small>`
   randomFacts.style.backgroundColor =rgbas[randomRGBA()];
+}
+function playShowDidYouKnowFacts() {
+  let intervalStarter = setInterval(showDidYouKnowFacts, 2000);
+  intervalStarter
+  const randomFactsButton = document.querySelector('#pause-play-did-you-know-facts')
+  randomFactsButton.addEventListener('click', (e)=> {
+    if (randomFactsButton.className === 'btn btn-warning') {
+      randomFactsButton.className = 'btn btn-success'
+      randomFactsButton.textContent = 'Play'
+      clearInterval(intervalStarter)
+    } else if (randomFactsButton.className === 'btn btn-success') {
+      randomFactsButton.className = 'btn btn-warning'
+      randomFactsButton.textContent = 'Pause'
+      intervalStarter = setInterval(showDidYouKnowFacts, 2000);
+      intervalStarter
+    }
+  })
 }
 function removeCoachAndVenue() {
   // Removes all the data from the right sidebar
