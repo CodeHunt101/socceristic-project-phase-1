@@ -521,7 +521,7 @@ function showDidYouKnowFacts() {
   randomFacts.style.backgroundColor =rgbas[randomRGBA()];
 }
 function playShowDidYouKnowFacts() {
-  let intervalStarter = setInterval(showDidYouKnowFacts, 2000);
+  let intervalStarter = setInterval(showDidYouKnowFacts, 10000);
   intervalStarter
   const randomFactsButton = document.querySelector('#pause-play-did-you-know-facts')
   randomFactsButton.addEventListener('click', (e)=> {
@@ -532,7 +532,7 @@ function playShowDidYouKnowFacts() {
     } else if (randomFactsButton.className === 'btn btn-success') {
       randomFactsButton.className = 'btn btn-warning'
       randomFactsButton.textContent = 'Pause'
-      intervalStarter = setInterval(showDidYouKnowFacts, 2000);
+      intervalStarter = setInterval(showDidYouKnowFacts, 10000);
       intervalStarter
     }
   })
