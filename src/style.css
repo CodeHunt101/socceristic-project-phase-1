@@ -92,10 +92,11 @@ table #rank {
 .content #standings {
   margin-left: auto;
   margin-right: auto;
-  max-width: 100%;
+  max-width: fit-content;
 }
 #standings tbody {
   cursor: pointer;
+  vertical-align: middle;
 }
 #standings tbody tr:hover {
   background-color: rgba(255, 255, 153, 0.2);
