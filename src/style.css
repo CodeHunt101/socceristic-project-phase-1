@@ -26,7 +26,7 @@ a {
 a:hover {
   color: brown;
 }
-#main-container {
+div#main-container {
   background-color: rgba(0, 0, 0, 0.7);
   padding-left: 1.5%;
   min-height: 100%;
@@ -42,7 +42,7 @@ h1 {
   margin-right: auto;
 }
 /* ::::::::::::::::Top sidebar:::::::::::::::: */
-#list-countries {
+div#list-countries {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -71,67 +71,65 @@ select#season {
   display: none;
   width: auto;
 }
-#league img {
+div#league img {
   background: rgba(255, 255, 255, 0.4);
 }
-#league-and-champion {
+div#league-and-champion {
   display: flex;
   justify-content: space-evenly;
 }
-#league,
-#champion {
+div#league, div#champion {
   margin: 5px;
 }
-th,
-td {
+th,td {
   color: seashell;
 }
-table #rank {
+table td#rank {
   text-align: center;
 }
-.content #standings {
+div.content table#standings {
   margin-left: auto;
   margin-right: auto;
   max-width: fit-content;
 }
-#standings tbody {
+table#standings tbody {
   cursor: pointer;
   vertical-align: middle;
 }
-#standings tbody tr:hover {
+table#standings tbody tr:hover {
   background-color: rgba(255, 255, 153, 0.2);
 }
-#standings tbody tr:focus {
+table#standings tbody tr:focus {
   background-color: rgba(255, 255, 153, 0.2);
 }
-#standings-qualifications {
+table#standings-qualifications {
   list-style-type: none;
   width: 50%;
   margin-left: auto;
   margin-right: auto;
 }
-#champions-league {
+li#champions-league {
   background: green;
   text-align: center;
 }
-#europa-league {
+li#europa-league {
   background: orange;
   color: #464646;
   text-align: center;
 }
-#relegation {
+li#relegation {
   background: red;
   text-align: center;
 }
-#facts-container {
+div#facts-container {
   display: flex;
   justify-content: space-evenly;
   align-items: flex-start;
 }
-#top-scorers {
+table#top-scorers {
   width: auto;
 }
-#top-scorers tbody tr:hover {
+table#top-scorers tbody tr:hover {
   background-color: rgba(255, 255, 153, 0.2);
 }
 td img {
@@ -149,7 +147,7 @@ td.biggest-streak {
   width: 45px;
 }
 /* ::::::::::::::::Right sidebar:::::::::::::::: */
-#coach {
+section#coach {
   width: 150px;
   height: 220px;
   background-color: rgba(0, 0, 0, 0.2);
@@ -158,11 +156,7 @@ td.biggest-streak {
   margin-left: auto;
   margin-right: auto;
 }
-#coach p,
-#venue p {
-  text-align: center;
-}
-#venue {
+section#venue {
   width: 350px;
   height: 330px;
   background-color: rgba(0, 0, 0, 0.2);
@@ -171,41 +165,45 @@ td.biggest-streak {
   margin-left: auto;
   margin-right: auto;
 }
-#venue img {
+section#coach p,
+section#venue p {
+  text-align: center;
+}
+section#venue img {
   width: 350px;
 }
-form {
+section form {
   max-width: fit-content;
   margin-left: auto;
   margin-right: auto;
 }
-#player {
-  margin-top: 5%;
+section#player {
+  margin-top: 15%;
 }
-#player-name {
+input#player-name {
   width: 65%;
 }
-#player-img {
+div#player-img {
   margin-left: 10%;
   margin-right: 10%;
   margin-top: 10%;
 }
-#player-img ul {
+div#player-img ul {
   margin-left: auto;
   margin-right: auto;
   max-width: fit-content;
 }
-#player-img img {
+div#player-img img {
   display: block;
   margin-left: auto;
   margin-right: auto;
 }
-#player-img p {
+div#player-img p {
   width: 75%;
   margin-left: auto;
   margin-right: auto;
 }
-#random-facts {
+section#random-facts {
   width: 90%;
   margin-left: auto;
   margin-right: auto;
@@ -214,13 +212,21 @@ form {
   padding: 2%;
   margin-bottom: 5%;
 }
+button#pause-play-did-you-know-facts {
+  width: auto;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  margin-top: -4%;
+  margin-bottom: 5%;
+}
 /* Spinner borders subject to change their margin */
-#coach .spinner-border {
+section#coach .spinner-border {
   margin: auto;
   margin-top: 75px;
   visibility: hidden;
 }
-#venue .spinner-border {
+section#venue .spinner-border {
   margin: auto;
   margin-top: 115px;
   visibility: hidden;
