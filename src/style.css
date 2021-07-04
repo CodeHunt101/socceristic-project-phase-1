@@ -179,7 +179,7 @@ form {
   margin-right: auto;
 }
 #player {
-  margin-top: 70px;
+  margin-top: 5%;
 }
 #player-name {
   width: 65%;
@@ -209,8 +209,9 @@ form {
   margin-left: auto;
   margin-right: auto;
   height: 180px;
-  margin-top: 50px;
-  padding: 10px;
+  margin-top: 5%;
+  padding: 2%;
+  margin-bottom: 5%;
 }
 /* Spinner borders subject to change their margin */
 #coach .spinner-border {
