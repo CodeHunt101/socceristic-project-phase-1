@@ -102,7 +102,7 @@ table#standings tbody tr:hover {
 table#standings tbody tr:focus {
   background-color: rgba(255, 255, 153, 0.2);
 }
-table#standings-qualifications {
+ul#standings-qualifications {
   list-style-type: none;
   width: 50%;
   margin-left: auto;
