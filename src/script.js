@@ -69,7 +69,7 @@ function runApp() {
                   seasonsDropdown.innerHTML = '';
                   leagues.response[0].seasons.reverse().forEach((season) => {
                     const seasonYear = document.createElement('option');
-                    if (season.year !== 2021) {
+                    if (season.year !== 2022) {
                       seasonsDropdown.appendChild(seasonYear)
                           .textContent = season.year;
                     }
