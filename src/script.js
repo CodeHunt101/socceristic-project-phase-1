@@ -297,17 +297,17 @@ function fetchRenderTopScorersAndInterestingStats() {
         }
         topScorersData.innerHTML = topScorersDataBody;
       });
-  document
-      .querySelector('#facts-container')
-      .appendChild(document.createElement('div'))
-      .setAttribute('id', 'more-facts');
+  // document
+  //     .querySelector('#facts-container')
+  //     .appendChild(document.createElement('div'))
+  //     .setAttribute('id', 'more-facts');
   // Render League facts. Needs mock server.
-  fetchRenderLeagueFactsJsJSON('largest_streak_wins', 'max');
-  fetchRenderLeagueFactsJsJSON('largest_streak_draws', 'max');
-  fetchRenderLeagueFactsJsJSON('largest_streak_loses', 'max');
-  fetchRenderLeagueFactsJsJSON('penalty', 'max');
-  fetchRenderLeagueFactsJsJSON('penalty', 'min');
-  fetchRenderLeagueFactsJsJSON('clean_sheet', 'max');
+  // fetchRenderLeagueFactsJsJSON('largest_streak_wins', 'max');
+  // fetchRenderLeagueFactsJsJSON('largest_streak_draws', 'max');
+  // fetchRenderLeagueFactsJsJSON('largest_streak_loses', 'max');
+  // fetchRenderLeagueFactsJsJSON('penalty', 'max');
+  // fetchRenderLeagueFactsJsJSON('penalty', 'min');
+  // fetchRenderLeagueFactsJsJSON('clean_sheet', 'max');
 }
 function fetchRenderChampionLogo() {
   // Fetch and Render champion team logo
@@ -589,5 +589,91 @@ function contentCatchError() {
 function removeElementifExists(selector) {
   if (!!document.querySelector(selector)) {
     document.querySelector(selector).remove();
+  }
+}
+function renderLeagueFacts(streakType, type) {
+  /* streakType options: 
+    -largest_streak_wins
+    -largest_streak_draws
+    -largest_streak_loses 
+    -penalty
+    -clean_sheet
+    type options:
+    -max, else min */
+  const season = document.querySelector("select");
+  const leagueId = document.querySelector(
+    "#league-champion h3:first-of-type"
+  ).id;
+  const leagueFacts = {};
+  const teamNames = [];
+  const streakTeams = [];
+  const teamsTable = document.querySelectorAll("#standings tbody tr");
+  for (let i = 0; i < teamsTable.length; i++) {
+    fetch(
+      `https://v3.football.api-sports.io/teams/statistics?season=${
+        season.value
+      }&team=${teamsTable[i].children[2].id.split("-")[1]}&league=${leagueId}`,
+      apiConfigObj
+    )
+      .then((resp) => resp.json())
+      .then((teamStats) => {
+        const factsList = {
+          largest_streak_wins: teamStats.response.biggest.streak.wins,
+          largest_streak_draws: teamStats.response.biggest.streak.draws,
+          largest_streak_loses: teamStats.response.biggest.streak.loses,
+          best_win_home: teamStats.response.biggest.wins.home,
+          best_win_away: teamStats.response.biggest.wins.away,
+          worst_lose_home: teamStats.response.biggest.loses.home,
+          worst_lose_away: teamStats.response.biggest.loses.away,
+          clean_sheet: teamStats.response.clean_sheet.total,
+          penalty: teamStats.response.penalty.total,
+        };
+        teamNames.push(teamsTable[i].children[2].textContent);
+        leagueFacts[teamsTable[i].children[2].textContent] = factsList;
+        if (i >= teamsTable.length - 1) {
+          const streak = teamNames.map((team) => leagueFacts[team][streakType]);
+          const biggestStreak =
+            type === "max" ? Math.max(...streak) : Math.min(...streak);
+          for (team of teamNames) {
+            if (leagueFacts[team][streakType] === biggestStreak) {
+              streakTeams.push(team);
+            }
+          }
+          if (streakType === "largest_streak_wins" && type === "max") {
+            renderStreakTeams("Largest Win Streak", biggestStreak, streakTeams);
+          }
+          if (streakType === "largest_streak_draws" && type === "max") {
+            renderStreakTeams(
+              "Largest Draw Streak",
+              biggestStreak,
+              streakTeams
+            );
+          }
+          if (streakType === "largest_streak_loses" && type === "max") {
+            renderStreakTeams(
+              "Largest Lose Streak",
+              biggestStreak,
+              streakTeams
+            );
+          }
+          if (streakType === "penalty" && type === "max") {
+            renderStreakTeams(
+              "Most Penalties Conceded",
+              biggestStreak,
+              streakTeams
+            );
+          }
+          if (streakType === "penalty" && type === "min") {
+            renderStreakTeams(
+              "Fewest Penalties Conceded",
+              biggestStreak,
+              streakTeams
+            );
+          }
+          if (streakType === "clean_sheet" && type === "max") {
+            renderStreakTeams("Most Clean Sheets", biggestStreak, streakTeams);
+          }
+        }
+      });
   }
 }
